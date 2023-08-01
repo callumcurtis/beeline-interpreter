@@ -13,12 +13,12 @@ logging::trivial::severity_level to_boost_logging_level(const LoggingLevel loggi
 {
     switch (logging_level)
     {
-        case LoggingLevel::trace: return logging::trivial::trace;
-        case LoggingLevel::debug: return logging::trivial::debug;
-        case LoggingLevel::info: return logging::trivial::info;
-        case LoggingLevel::warn: return logging::trivial::warning;
-        case LoggingLevel::error: return logging::trivial::error;
-        case LoggingLevel::fatal: return logging::trivial::fatal;
+        case LoggingLevel::TRACE: return logging::trivial::trace;
+        case LoggingLevel::DEBUG: return logging::trivial::debug;
+        case LoggingLevel::INFO: return logging::trivial::info;
+        case LoggingLevel::WARN: return logging::trivial::warning;
+        case LoggingLevel::ERROR: return logging::trivial::error;
+        case LoggingLevel::FATAL: return logging::trivial::fatal;
     }
     assert(false && "invalid logging level");
 }

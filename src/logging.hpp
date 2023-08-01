@@ -5,12 +5,12 @@
 
 enum struct LoggingLevel
 {
-    trace,
-    debug,
-    info,
-    warn,
-    error,
-    fatal,
+    TRACE,
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR,
+    FATAL,
 };
 
 
@@ -21,27 +21,27 @@ class LoggingStream
 {
 public:
     LoggingStream(const LoggingLevel logging_level);
-    template <typename T>
-    friend const LoggingStream& operator<<(const LoggingStream& ls, const T& str)
+    template <typename String>
+    friend const LoggingStream& operator<<(const LoggingStream& ls, const String& str)
     {
         switch (ls.logging_level_)
         {
-            case LoggingLevel::trace:
+            case LoggingLevel::TRACE:
                 BOOST_LOG_TRIVIAL(trace) << str;
                 break;
-            case LoggingLevel::debug:
+            case LoggingLevel::DEBUG:
                 BOOST_LOG_TRIVIAL(debug) << str;
                 break;
-            case LoggingLevel::info:
+            case LoggingLevel::INFO:
                 BOOST_LOG_TRIVIAL(info) << str;
                 break;
-            case LoggingLevel::warn:
+            case LoggingLevel::WARN:
                 BOOST_LOG_TRIVIAL(warning) << str;
                 break;
-            case LoggingLevel::error:
+            case LoggingLevel::ERROR:
                 BOOST_LOG_TRIVIAL(error) << str;
                 break;
-            case LoggingLevel::fatal:
+            case LoggingLevel::FATAL:
                 BOOST_LOG_TRIVIAL(fatal) << str;
                 break;
             default:
