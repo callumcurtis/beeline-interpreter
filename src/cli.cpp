@@ -90,14 +90,14 @@ protected:
 };
 
 
-class DebugLevelValidationHandler : public ArgumentHandler
+class LogLevelValidationHandler : public ArgumentHandler
 {
 protected:
     void handle_(const Arguments arguments, const ParsingContext context) const override
     {
-        if (arguments.debug_level < DebugLevel::TRACE || arguments.debug_level > DebugLevel::FATAL)
+        if (arguments.log_level < LogLevel::TRACE || arguments.log_level > LogLevel::FATAL)
         {
-            std::cerr << "error: debug level must be between 0 and 5\n" << build_usage_string(context.argv[0], context.desc);
+            std::cerr << "error: log level must be between 0 and 5\n" << build_usage_string(context.argv[0], context.desc);
             exit(1);
         }
     }
@@ -110,13 +110,13 @@ public:
     Impl()
     {
         std::unique_ptr<HelpXorVersionValidationHandler> mutual_exclusive_help_and_version_handler = std::make_unique<HelpXorVersionValidationHandler>();
-        std::unique_ptr<DebugLevelValidationHandler> debug_level_validation_handler = std::make_unique<DebugLevelValidationHandler>();
+        std::unique_ptr<LogLevelValidationHandler> log_level_validation_handler = std::make_unique<LogLevelValidationHandler>();
         std::unique_ptr<HelpHandler> help_handler = std::make_unique<HelpHandler>();
         std::unique_ptr<VersionHandler> version_handler = std::make_unique<VersionHandler>();
 
         help_handler->set_next(std::move(version_handler));
-        debug_level_validation_handler->set_next(std::move(help_handler));
-        mutual_exclusive_help_and_version_handler->set_next(std::move(debug_level_validation_handler));
+        log_level_validation_handler->set_next(std::move(help_handler));
+        mutual_exclusive_help_and_version_handler->set_next(std::move(log_level_validation_handler));
 
         handler_chain_ = std::move(mutual_exclusive_help_and_version_handler);
     }
@@ -138,7 +138,7 @@ public:
         po::notify(vm);
 
         const Arguments arguments = {
-            static_cast<DebugLevel>(vm["debug_level"].as<int>()),
+            static_cast<LogLevel>(vm["log_level"].as<int>()),
             vm.count("version") > 0,
             vm.count("help") > 0,
         };
@@ -153,7 +153,7 @@ private:
     {
         po::options_description desc("Allowed options");
         desc.add_options()
-            ("debug_level,d", po::value<int>()->default_value(0), "set debug level")
+            ("log_level,d", po::value<int>()->default_value(0), "set log level")
             ("help,h", "produce help message")
             ("version,v", "print version string")
         ;

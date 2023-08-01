@@ -1,7 +1,7 @@
 #pragma once
 
 
-enum struct DebugLevel
+enum struct LogLevel
 {
     TRACE,
     DEBUG,
@@ -14,7 +14,7 @@ enum struct DebugLevel
 
 struct Arguments
 {
-    const DebugLevel debug_level;
+    const LogLevel log_level;
     const bool version;
     const bool help;
 };
