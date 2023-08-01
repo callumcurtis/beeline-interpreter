@@ -9,7 +9,7 @@ include(Sanitizers.cmake)
 option(ENABLE_COVERAGE "Enable Lcov code-coverage analysis" false)
 
 find_package(Catch2 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS program_options)
+find_package(Boost REQUIRED COMPONENTS program_options log)
 
 # Taken from: https://www.youtube.com/watch?v=_KM0rDQYFSg
 if(ENABLE_COVERAGE)

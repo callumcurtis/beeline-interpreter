@@ -5,6 +5,7 @@
 #include <boost/program_options.hpp>
 
 #include "cli.hpp"
+#include "logging.hpp"
 
 
 namespace po = boost::program_options;
@@ -90,14 +91,14 @@ protected:
 };
 
 
-class LogLevelValidationHandler : public ArgumentHandler
+class LoggingLevelValidationHandler : public ArgumentHandler
 {
 protected:
     void handle_(const Arguments arguments, const ParsingContext context) const override
     {
-        if (arguments.log_level < LogLevel::TRACE || arguments.log_level > LogLevel::FATAL)
+        if (arguments.logging_level < LoggingLevel::trace || arguments.logging_level > LoggingLevel::fatal)
         {
-            std::cerr << "error: log level must be between 0 and 5\n" << build_usage_string(context.argv[0], context.desc);
+            std::cerr << "error: logging level must be between 0 and 5\n" << build_usage_string(context.argv[0], context.desc);
             exit(1);
         }
     }
@@ -110,13 +111,13 @@ public:
     Impl()
     {
         std::unique_ptr<HelpXorVersionValidationHandler> mutual_exclusive_help_and_version_handler = std::make_unique<HelpXorVersionValidationHandler>();
-        std::unique_ptr<LogLevelValidationHandler> log_level_validation_handler = std::make_unique<LogLevelValidationHandler>();
+        std::unique_ptr<LoggingLevelValidationHandler> logging_level_validation_handler = std::make_unique<LoggingLevelValidationHandler>();
         std::unique_ptr<HelpHandler> help_handler = std::make_unique<HelpHandler>();
         std::unique_ptr<VersionHandler> version_handler = std::make_unique<VersionHandler>();
 
         help_handler->set_next(std::move(version_handler));
-        log_level_validation_handler->set_next(std::move(help_handler));
-        mutual_exclusive_help_and_version_handler->set_next(std::move(log_level_validation_handler));
+        logging_level_validation_handler->set_next(std::move(help_handler));
+        mutual_exclusive_help_and_version_handler->set_next(std::move(logging_level_validation_handler));
 
         handler_chain_ = std::move(mutual_exclusive_help_and_version_handler);
     }
@@ -138,7 +139,7 @@ public:
         po::notify(vm);
 
         const Arguments arguments = {
-            static_cast<LogLevel>(vm["log_level"].as<int>()),
+            static_cast<LoggingLevel>(vm["logging_level"].as<int>()),
             vm.count("version") > 0,
             vm.count("help") > 0,
         };
@@ -153,7 +154,7 @@ private:
     {
         po::options_description desc("Allowed options");
         desc.add_options()
-            ("log_level,d", po::value<int>()->default_value(0), "set log level")
+            ("logging_level,d", po::value<int>()->default_value(0), "set logging level")
             ("help,h", "produce help message")
             ("version,v", "print version string")
         ;
@@ -162,10 +163,7 @@ private:
 };
 
 
-ArgumentParser::ArgumentParser()
-{
-    impl_ = new Impl();
-}
+ArgumentParser::ArgumentParser() : impl_(new Impl()) {}
 
 
 ArgumentParser::~ArgumentParser()

@@ -1,20 +1,11 @@
 #pragma once
 
-
-enum struct LogLevel
-{
-    TRACE,
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR,
-    FATAL,
-};
+#include "logging.hpp"
 
 
 struct Arguments
 {
-    const LogLevel log_level;
+    const LoggingLevel logging_level;
     const bool version;
     const bool help;
 };
