@@ -1,5 +1,4 @@
 #include <unordered_map>
-
 #include <cctype>
 #include <sstream>
 #include <cassert>
