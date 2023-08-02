@@ -18,7 +18,7 @@ std::string build_usage_string(const std::string &process_name, const po::option
 }
 
 
-struct ParsingContext
+struct ArgumentParsingContext
 {
     const int argc;
     const char** argv;
@@ -33,7 +33,7 @@ public:
     {
         this->next_ = std::move(next);
     }
-    void handle(const Arguments arguments, const ParsingContext context) const
+    void handle(const Arguments arguments, const ArgumentParsingContext context) const
     {
         handle_(arguments, context);
         if (next_)
@@ -44,14 +44,14 @@ public:
 private:
     std::unique_ptr<ArgumentHandler> next_{nullptr};
 protected:
-    virtual void handle_(const Arguments arguments, const ParsingContext context) const = 0;
+    virtual void handle_(const Arguments arguments, const ArgumentParsingContext context) const = 0;
 };
 
 
 class HelpXorVersionValidationHandler : public ArgumentHandler
 {
 protected:
-    void handle_(const Arguments arguments, const ParsingContext context) const override
+    void handle_(const Arguments arguments, const ArgumentParsingContext context) const override
     {
         if (arguments.version && arguments.help)
         {
@@ -65,7 +65,7 @@ protected:
 class VersionHandler : public ArgumentHandler
 {
 protected:
-    void handle_(const Arguments arguments, const ParsingContext context) const override
+    void handle_(const Arguments arguments, const ArgumentParsingContext context) const override
     {
         if (arguments.version)
         {
@@ -79,7 +79,7 @@ protected:
 class HelpHandler : public ArgumentHandler
 {
 protected:
-    void handle_(const Arguments arguments, const ParsingContext context) const override
+    void handle_(const Arguments arguments, const ArgumentParsingContext context) const override
     {
         if (arguments.help)
         {
@@ -93,7 +93,7 @@ protected:
 class LoggingLevelValidationHandler : public ArgumentHandler
 {
 protected:
-    void handle_(const Arguments arguments, const ParsingContext context) const override
+    void handle_(const Arguments arguments, const ArgumentParsingContext context) const override
     {
         if (arguments.logging_level < LoggingLevel::TRACE || arguments.logging_level > LoggingLevel::FATAL)
         {
