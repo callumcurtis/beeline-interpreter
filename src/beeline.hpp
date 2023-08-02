@@ -9,30 +9,6 @@
 #include <cstddef>
 
 
-class BeelineError : public std::runtime_error
-{
-public:
-    BeelineError(const std::string& message);
-};
-
-
-class BeelineSyntaxError : public BeelineError
-{
-public:
-    BeelineSyntaxError(const std::string& message, const Token::Position& position);
-    const Token::Position& position() const noexcept;
-private:
-    const Token::Position position_;
-};
-
-
-class BeelineLexingError : public BeelineError
-{
-public:
-    BeelineLexingError(const std::string& message);
-};
-
-
 struct Token
 {
     enum class Type
@@ -95,14 +71,6 @@ struct Token
 };
 
 
-std::ostream& operator<<(std::ostream& os, const Token::Type& type);
-std::ostream& operator<<(std::ostream& os, const Token::Position& position);
-std::ostream& operator<<(std::ostream& os, const Token& token);
-std::ostream& operator<<(std::ostream& os, const BeelineError& be);
-std::ostream& operator<<(std::ostream& os, const BeelineSyntaxError& bse);
-std::ostream& operator<<(std::ostream& os, const BeelineLexingError& ble);
-
-
 class Lexer
 {
 public:
@@ -120,3 +88,35 @@ class Beeline
 public:
     void run(const std::string& input);
 };
+
+
+class BeelineError : public std::runtime_error
+{
+public:
+    BeelineError(const std::string& message);
+};
+
+
+class BeelineSyntaxError : public BeelineError
+{
+public:
+    BeelineSyntaxError(const std::string& message, const Token::Position& position);
+    const Token::Position& position() const noexcept;
+private:
+    const Token::Position position_;
+};
+
+
+class BeelineLexingError : public BeelineError
+{
+public:
+    BeelineLexingError(const std::string& message);
+};
+
+
+std::ostream& operator<<(std::ostream& os, const Token::Type& type);
+std::ostream& operator<<(std::ostream& os, const Token::Position& position);
+std::ostream& operator<<(std::ostream& os, const Token& token);
+std::ostream& operator<<(std::ostream& os, const BeelineError& be);
+std::ostream& operator<<(std::ostream& os, const BeelineSyntaxError& bse);
+std::ostream& operator<<(std::ostream& os, const BeelineLexingError& ble);
