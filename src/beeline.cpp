@@ -338,7 +338,7 @@ private:
         Token::Type type = Token::Type::IDENTIFIER;
         if (type_iter != keyword_to_type_.end())
         {
-            add_token(type_iter->second);
+            type = type_iter->second;
         }
         add_token(type);
     }
