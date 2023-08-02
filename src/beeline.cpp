@@ -88,7 +88,7 @@ std::ostream& operator<<(std::ostream& os, const Token::Type& type)
 
 std::ostream& operator<<(std::ostream& os, const Token::Position& position)
 {
-    return os << position.line << ":" << position.column;
+    return os << position.line << ":" << position.column << "-" << (position.column + position.length - 1);
 }
 
 
@@ -118,7 +118,7 @@ std::ostream& operator<<(std::ostream& os, const Token::Literal& literal)
 
 std::ostream& operator<<(std::ostream& os, const Token& token)
 {
-    return os << token.type << " " << token.lexeme << " " << token.literal;
+    return os << token.type << " " << token.lexeme << " " << token.literal << " " << token.position;
 }
 
 
