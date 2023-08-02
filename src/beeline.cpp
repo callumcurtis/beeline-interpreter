@@ -142,6 +142,7 @@ public:
                 syntax_error_messages << bse << "\n";
             }
         }
+        add_token(Token::Type::END_OF_FILE);
         if (syntax_error)
         {
             throw BeelineLexingError(syntax_error_messages.str());
@@ -167,7 +168,6 @@ private:
             starting_column_of_current_token_ = current_column_;
             scan_next_token();
         }
-        add_token(Token::Type::END_OF_FILE);
     }
     void scan_next_token()
     {
