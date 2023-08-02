@@ -189,7 +189,7 @@ private:
             case '.':
                 if (!std::isdigit(peek()))
                 {
-                    throw BeelineSyntaxError("Missing digit after decimal point.", current_token_position());
+                    throw BeelineSyntaxError("missing digit after decimal point", current_token_position());
                 }
                 number_after_decimal_point();
                 break;
@@ -223,7 +223,7 @@ private:
                 }
                 else
                 {
-                    throw BeelineSyntaxError("Unexpected character.", current_token_position());
+                    throw BeelineSyntaxError("unexpected character", current_token_position());
                 }
                 break;
         }
@@ -300,7 +300,7 @@ private:
         }
         if (is_done())
         {
-            throw BeelineSyntaxError("Unterminated string.", current_token_position());
+            throw BeelineSyntaxError("unterminated string", current_token_position());
         }
         advance();
         const std::string quoted_string_literal{current_token_lexeme()};
