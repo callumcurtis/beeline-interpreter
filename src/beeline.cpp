@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <sstream>
+#include <cassert>
 
 #include "beeline.hpp"
 #include "logging.hpp"
@@ -81,12 +82,37 @@ std::ostream& operator<<(std::ostream& os, const Token::Type& type)
         case Token::Type::WHILE: return os << "WHILE";
         case Token::Type::END_OF_FILE: return os << "END_OF_FILE";
     }
+    assert(false && "unhandled token type");
 }
 
 
 std::ostream& operator<<(std::ostream& os, const Token::Position& position)
 {
     return os << position.line << ":" << position.column;
+}
+
+
+std::ostream& operator<<(std::ostream& os, const Token::Literal& literal)
+{
+    auto visitor = [](const auto& v) -> std::string {
+        using V = std::decay_t<decltype(v)>;
+
+        if constexpr (std::is_same_v<V, int>) {
+            return std::to_string(v);
+        }
+        if constexpr (std::is_same_v<V, double>) {
+            return std::to_string(v);
+        }
+        if constexpr (std::is_same_v<V, std::nullptr_t>) {
+            return "nullptr";
+        }
+        if constexpr (std::is_same_v<V, std::string>) {
+            return v;
+        }
+        assert(false && "unhandled literal type");
+    };
+
+    return os << std::visit(visitor, literal);
 }
 
 
