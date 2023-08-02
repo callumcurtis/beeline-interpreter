@@ -96,7 +96,7 @@ class LoggingLevelValidationHandler : public ArgumentHandler
 protected:
     void handle_(const Arguments arguments, const ParsingContext context) const override
     {
-        if (arguments.logging_level < LoggingLevel::trace || arguments.logging_level > LoggingLevel::fatal)
+        if (arguments.logging_level < LoggingLevel::TRACE || arguments.logging_level > LoggingLevel::FATAL)
         {
             std::cerr << "error: logging level must be between 0 and 5\n" << build_usage_string(context.argv[0], context.desc);
             exit(1);
