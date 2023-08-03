@@ -5,12 +5,8 @@ project(beeline_interpreter LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 20)
 
 include(Sanitizers.cmake)
-include(Tests.cmake)
 
 option(ENABLE_COVERAGE "Enable Lcov code-coverage analysis" false)
-
-find_package(Catch2 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS program_options log)
 
 # Taken from: https://www.youtube.com/watch?v=_KM0rDQYFSg
 if(ENABLE_COVERAGE)
@@ -19,10 +15,9 @@ if(ENABLE_COVERAGE)
     append_coverage_compiler_flags()
 endif()
 
-file(GLOB SOURCES "src/*.cpp" "src/*.hpp")
-add_executable(beeline ${SOURCES})
-target_include_directories(beeline PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(beeline PRIVATE ${Boost_LIBRARIES})
+add_subdirectory(src)
+add_subdirectory(app)
+add_subdirectory(test)
 
 if(ENABLE_COVERAGE)
     # Create the coverage target.
