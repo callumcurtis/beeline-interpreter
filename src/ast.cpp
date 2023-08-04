@@ -5,13 +5,17 @@
 #include "ast.hpp"
 
 
+Expression::Binary::Binary(std::unique_ptr<Expression> left, Token op, std::unique_ptr<Expression> right) : left{std::move(left)}, op{std::move(op)}, right{std::move(right)} {}
 void Expression::Binary::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
+Expression::Grouping::Grouping(std::unique_ptr<Expression> expression) : expression{std::move(expression)} {}
 void Expression::Grouping::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
+Expression::Literal::Literal(Token::Literal value) : value{std::move(value)} {}
 void Expression::Literal::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
+Expression::Unary::Unary(Token op, std::unique_ptr<Expression> right) : op{std::move(op)}, right{std::move(right)} {}
 void Expression::Unary::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
