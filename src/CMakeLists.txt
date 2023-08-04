@@ -13,7 +13,7 @@ add_custom_command(
 
 add_custom_command(
     OUTPUT ast.cpp
-    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py cpp > ast.cpp
+    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py cpp --header \"ast.hpp\" > ast.cpp
     DEPENDS ast.hpp
     COMMENT "Generating AST source file"
     VERBATIM
