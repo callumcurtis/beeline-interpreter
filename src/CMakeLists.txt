@@ -6,7 +6,7 @@ find_package(Boost
 
 add_custom_command(
     OUTPUT ast.hpp
-    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py cpp --declaration > ast.hpp
+    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py hpp > ast.hpp
     COMMENT "Generating AST header file"
     VERBATIM
 )
