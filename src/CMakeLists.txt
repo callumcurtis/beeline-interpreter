@@ -4,10 +4,26 @@ find_package(Boost
     log
 )
 
+add_custom_command(
+    OUTPUT ast.hpp
+    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py cpp --declaration > ast.hpp
+    COMMENT "Generating AST header file"
+    VERBATIM
+)
+
+add_custom_command(
+    OUTPUT ast.cpp
+    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py cpp > ast.cpp
+    DEPENDS ast.hpp
+    COMMENT "Generating AST source file"
+    VERBATIM
+)
+
 add_library(beeline_lib
     beeline.cpp
     lexer.cpp
     logging.cpp
+    ast.cpp
 )
 
 target_include_directories(beeline_lib
