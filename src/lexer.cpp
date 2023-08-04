@@ -87,8 +87,8 @@ std::ostream& operator<<(std::ostream& os, const Token::Literal& literal)
     auto visitor = [](const auto& v) -> std::string {
         using V = std::decay_t<decltype(v)>;
 
-        if constexpr (std::is_same_v<V, int>) {
-            return std::to_string(v);
+        if constexpr (std::is_same_v<V, bool>) {
+            return v ? "true" : "false";
         }
         if constexpr (std::is_same_v<V, double>) {
             return std::to_string(v);
