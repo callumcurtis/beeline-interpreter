@@ -8,52 +8,53 @@
 #include "lexer.hpp"
 
 
-class Visitor;
-
-
 struct Expression
 {
+    class Visitor;
+    class Binary;
+    class Grouping;
+    class Literal;
+    class Unary;
     virtual void accept(Visitor& visitor) const = 0;
 };
 
 
-struct Binary : Expression
+struct Expression::Binary : Expression
 {
-    void accept(Visitor& visitor) const override;
+    void accept(Expression::Visitor& visitor) const override;
     const std::unique_ptr<Expression> left;
     const Token op;
     const std::unique_ptr<Expression> right;
 };
 
 
-struct Grouping : Expression
+struct Expression::Grouping : Expression
 {
-    void accept(Visitor& visitor) const override;
+    void accept(Expression::Visitor& visitor) const override;
     const std::unique_ptr<Expression> expression;
 };
 
 
-struct Literal : Expression
+struct Expression::Literal : Expression
 {
-    void accept(Visitor& visitor) const override;
+    void accept(Expression::Visitor& visitor) const override;
     const std::variant<std::nullptr_t, std::string, double, bool> value;
 };
 
 
-struct Unary : Expression
+struct Expression::Unary : Expression
 {
-    void accept(Visitor& visitor) const override;
+    void accept(Expression::Visitor& visitor) const override;
     const Token op;
     const std::unique_ptr<Expression> right;
 };
 
 
-class Visitor
+class Expression::Visitor
 {
 public:
-    virtual void visit(const Expression& expression) = 0;
-    virtual void visit(const Binary& binary) = 0;
-    virtual void visit(const Grouping& grouping) = 0;
-    virtual void visit(const Literal& literal) = 0;
-    virtual void visit(const Unary& unary) = 0;
+    virtual void visit(const Expression::Binary& binary) = 0;
+    virtual void visit(const Expression::Grouping& grouping) = 0;
+    virtual void visit(const Expression::Literal& literal) = 0;
+    virtual void visit(const Expression::Unary& unary) = 0;
 };

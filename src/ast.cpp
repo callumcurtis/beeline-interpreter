@@ -5,13 +5,13 @@
 #include "ast.hpp"
 
 
-void Binary::accept(Visitor& visitor) const { visitor.visit(*this); }
+void Expression::Binary::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
-void Grouping::accept(Visitor& visitor) const { visitor.visit(*this); }
+void Expression::Grouping::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
-void Literal::accept(Visitor& visitor) const { visitor.visit(*this); }
+void Expression::Literal::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
-void Unary::accept(Visitor& visitor) const { visitor.visit(*this); }
+void Expression::Unary::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }

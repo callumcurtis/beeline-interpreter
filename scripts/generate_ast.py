@@ -40,30 +40,35 @@ class ABC:
         self.parent = parent
 
 
+EXPRESSION = ABC("Expression")
+
+
 TYPES = [
-    ABC("Expression"),
-    Type("Binary", [Field("left", "std::unique_ptr<Expression>"), Field("op", "Token"), Field("right", "std::unique_ptr<Expression>")], "Expression"),
-    Type("Grouping", [Field("expression", "std::unique_ptr<Expression>")], "Expression"),
-    Type("Literal", [Field("value", "std::variant<std::nullptr_t, std::string, double, bool>")], "Expression"),
-    Type("Unary", [Field("op", "Token"), Field("right", "std::unique_ptr<Expression>")], "Expression"),
+    EXPRESSION,
+    Type("Binary", [Field("left", "std::unique_ptr<Expression>"), Field("op", "Token"), Field("right", "std::unique_ptr<Expression>")], EXPRESSION),
+    Type("Grouping", [Field("expression", "std::unique_ptr<Expression>")], EXPRESSION),
+    Type("Literal", [Field("value", "std::variant<std::nullptr_t, std::string, double, bool>")], EXPRESSION),
+    Type("Unary", [Field("op", "Token"), Field("right", "std::unique_ptr<Expression>")], EXPRESSION),
 ]
 
 
 class AstMetaProgrammer (abc.ABC):
     def __init__(self, types: list[Type]):
         self._types = types
-        self._visitable_types = [
-            type.name
-            for type in types
-            if not isinstance(types, ABC)
-        ]
+        self._visitable_types_by_parent = {}
+        for t in self._types:
+            if isinstance(t, ABC):
+                continue
+            if t.parent not in self._visitable_types_by_parent:
+                self._visitable_types_by_parent[t.parent] = []
+            self._visitable_types_by_parent[t.parent].append(t)
 
     def generate(self) -> str:
         return "".join([
             self.generate_docstring(),
             self.generate_includes(),
             self.generate_ast_classes(),
-            self.generate_visitor(),
+            self.generate_visitors(),
             "\n"
         ])
 
@@ -80,7 +85,7 @@ class AstMetaProgrammer (abc.ABC):
         pass
 
     @abc.abstractmethod
-    def generate_visitor(self) -> str:
+    def generate_visitors(self) -> str:
         pass
 
 
@@ -117,9 +122,9 @@ class CppAstMetaProgrammer (AstMetaProgrammer):
     def generate_ast_class_methods(self, t: Type):
         if isinstance(t, ABC):
             return ""
-        return f"\n\n\nvoid {t.name}::accept(Visitor& visitor) const {{ visitor.visit(*this); }}"
+        return f"\n\n\nvoid {t.parent.name}::{t.name}::accept({t.parent.name}::Visitor& visitor) const {{ visitor.visit(*this); }}"
 
-    def generate_visitor(self):
+    def generate_visitors(self):
         return ""
 
 
@@ -134,20 +139,15 @@ class HppAstMetaProgrammer (AstMetaProgrammer):
         return "\n\n#include <variant>\n#include <memory>\n\n#include \"lexer.hpp\""
 
     def generate_ast_classes(self):
-        return "".join(
-            [self.generate_visitor_forward_declaration()]
-            + [
-                self.generate_ast_class(t)
-                for t in self._types
-            ]
-        )
-
-    def generate_visitor_forward_declaration(self):
-        return "\n\n\nclass Visitor;"
+        return "".join([
+            self.generate_ast_class(t)
+            for t in self._types
+        ])
 
     def generate_ast_class(self, t: Type):
         return "".join([
             self.generate_ast_class_header(t),
+            self.generate_ast_class_types(t),
             self.generate_ast_class_methods(t),
             self.generate_ast_class_fields(t),
             self.generate_ast_class_footer(t),
@@ -156,12 +156,17 @@ class HppAstMetaProgrammer (AstMetaProgrammer):
     def generate_ast_class_header(self, t: Type):
         if isinstance(t, ABC):
             return f"\n\n\nstruct {t.name}\n{{"
-        return f"\n\n\nstruct {t.name} : {t.parent}\n{{"
+        return f"\n\n\nstruct {t.parent.name}::{t.name} : {t.parent.name}\n{{"
+    
+    def generate_ast_class_types(self, t: Type):
+        if not isinstance(t, ABC):
+            return ""
+        return "\n".join([""] + ["    class Visitor;"] + [f"    class {sub_t.name};" for sub_t in self._types if sub_t.parent == t])
 
     def generate_ast_class_methods(self, t: Type):
         if isinstance(t, ABC):
             return "\n    virtual void accept(Visitor& visitor) const = 0;"
-        return "\n    void accept(Visitor& visitor) const override;"
+        return f"\n    void accept({t.parent.name}::Visitor& visitor) const override;"
 
     def generate_ast_class_fields(self, t: Type):
         if isinstance(t, ABC):
@@ -171,26 +176,34 @@ class HppAstMetaProgrammer (AstMetaProgrammer):
     def generate_ast_class_footer(self, t: Type):
         return "\n};"
 
-    def generate_visitor(self):
+    def generate_visitors(self):
         return "".join([
-            self.generate_visitor_header(),
-            self.generate_visitor_methods(),
-            self.generate_visitor_footer(),
+            self.generate_visitor(t)
+            for t in self._visitable_types_by_parent.keys()
+        ])
+    
+    def generate_visitor(self, t: Type):
+        return "".join([
+            self.generate_visitor_header(t),
+            self.generate_visitor_methods(t),
+            self.generate_visitor_footer(t),
         ])
 
-    def generate_visitor_header(self):
-        return "\n\n\nclass Visitor\n{"
+    def generate_visitor_header(self, t: Type):
+        return f"\n\n\nclass {t.name}::Visitor\n{{"
 
-    def generate_visitor_methods(self):
+    def generate_visitor_methods(self, t: Type):
         return "".join(
             ["\npublic:"]
             + [
-                f"\n    virtual void visit(const {type}& {type.lower()}) = 0;"
-                for type in self._visitable_types
+                f"\n    virtual void visit(const {v_t.name}& {v_t.name.lower()}) = 0;"
+                if isinstance(v_t, ABC) else
+                f"\n    virtual void visit(const {v_t.parent.name}::{v_t.name}& {v_t.name.lower()}) = 0;"
+                for v_t in self._visitable_types_by_parent.get(t)
             ]
         )
 
-    def generate_visitor_footer(self):
+    def generate_visitor_footer(self, t: Type):
         return "\n};"
 
 
