@@ -2,10 +2,18 @@
 #include <memory>
 #include <initializer_list>
 #include <algorithm>
+#include <cassert>
 
 #include "parser.hpp"
 #include "ast.hpp"
 #include "lexer.hpp"
+
+
+enum struct Associativity
+{
+    LEFT,
+    RIGHT,
+};
 
 
 class Parser::Impl
@@ -43,19 +51,31 @@ private:
     {
         return tokens_.at(current_token_index_++);
     }
+    std::unique_ptr<Expression> binary(
+        std::unique_ptr<Expression> (Parser::Impl::*operand)(void),
+        const Associativity associativity,
+        const std::initializer_list<Token::Type> types
+    ) {
+        assert(associativity == Associativity::LEFT && "Associativity::RIGHT is not implemented");
+        std::unique_ptr<Expression> expression = (this->*operand)();
+        while (is_match(types))
+        {
+            const Token& op = advance();
+            std::unique_ptr<Expression> right = (this->*operand)();
+            expression = std::make_unique<Expression::Binary>(std::move(expression), op, std::move(right));
+        }
+        return expression;
+    }
     std::unique_ptr<Expression> expression()
     {
         return equality();
     }
     std::unique_ptr<Expression> equality()
     {
-        std::unique_ptr<Expression> expression = comparison();
-        while (is_match({Token::Type::BANG_EQUAL, Token::Type::EQUAL_EQUAL}))
-        {
-            const Token& op = advance();
-            std::unique_ptr<Expression> right = comparison();
-            expression = std::make_unique<Expression::Binary>(std::move(expression), op, std::move(right));
-        }
-        return expression;
+        return binary(&comparison, Associativity::LEFT, {Token::Type::BANG_EQUAL, Token::Type::EQUAL_EQUAL});
+    }
+    std::unique_ptr<Expression> comparison()
+    {
+        return binary(&term, Associativity::LEFT, {Token::Type::GREATER, Token::Type::GREATER_EQUAL, Token::Type::LESS, Token::Type::LESS_EQUAL});
     }
 };

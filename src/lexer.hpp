@@ -10,7 +10,7 @@
 
 struct Token
 {
-    enum class Type
+    enum struct Type
     {
         // Single-character tokens.
         LEFT_PARENTHESIS,

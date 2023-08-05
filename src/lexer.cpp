@@ -220,7 +220,7 @@ private:
     }
     char advance()
     {
-        if(peek() == '\n')
+        if (peek() == '\n')
         {
             ++current_line_;
             current_column_ = 1;
