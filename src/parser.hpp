@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <ostream>
+#include <memory>
 
 #include "beeline.hpp"
 
@@ -13,6 +14,7 @@ public:
     Parser() = delete;
     Parser(std::vector<Token> tokens);
     ~Parser();
+    std::unique_ptr<Expression> parse();
 private:
     class Impl;
     Impl *impl_;
