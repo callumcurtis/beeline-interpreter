@@ -82,4 +82,8 @@ private:
     {
         return binary(&factor, Associativity::LEFT, {Token::Type::MINUS, Token::Type::PLUS});
     }
+    std::unique_ptr<Expression> factor()
+    {
+        return binary(&unary, Associativity::LEFT, {Token::Type::SLASH, Token::Type::STAR});
+    }
 };
