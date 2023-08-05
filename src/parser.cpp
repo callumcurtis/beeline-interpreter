@@ -78,4 +78,8 @@ private:
     {
         return binary(&term, Associativity::LEFT, {Token::Type::GREATER, Token::Type::GREATER_EQUAL, Token::Type::LESS, Token::Type::LESS_EQUAL});
     }
+    std::unique_ptr<Expression> term()
+    {
+        return binary(&factor, Associativity::LEFT, {Token::Type::MINUS, Token::Type::PLUS});
+    }
 };
