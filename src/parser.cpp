@@ -54,15 +54,22 @@ private:
     }
     void require_match(const std::initializer_list<Token::Type> types, const std::string& message)
     {
-        if (is_match(types))
+        if (!is_match(types))
         {
-            return;
+            panic(message);
         }
-        throw BeelineParseError(message, peek());
     }
     void require_match(const Token::Type type, const std::string& message)
     {
         require_match({type}, message);
+    }
+    void panic(const std::string& message)
+    {
+        panic(message, peek());
+    }
+    void panic(const std::string& message, const Token& token)
+    {
+        throw BeelineParseError(message, token);
     }
     void recover()
     {
@@ -156,7 +163,7 @@ private:
                 expr = std::make_unique<Expression::Grouping>(std::move(expr));
                 break;
             default:
-                assert(false && "invalid primary expression");
+                panic("expected expression", token);
         }
         return expr;
     }

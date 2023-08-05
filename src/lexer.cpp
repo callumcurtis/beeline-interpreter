@@ -216,7 +216,6 @@ private:
                 {
                     throw BeelineSyntaxError("unexpected character", current_token_position());
                 }
-                break;
         }
     }
     char advance()
