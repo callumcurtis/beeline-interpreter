@@ -21,6 +21,7 @@ struct Token
         PLUS,
         SLASH,
         STAR,
+        NEWLINE,
 
         // One or two character tokens.
         BANG,

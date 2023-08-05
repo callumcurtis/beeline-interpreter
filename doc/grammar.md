@@ -4,7 +4,7 @@
 
 The Beeline language syntax, $B$, is defined using a context-free grammar, $G = (V, \sum, R, S)$, where $V$ is a finite set of variables, $\sum$ is a finite set of terminals, $R$ is a finite set of substitution ruless, and $S \in V$ is the start variable, such that $B = L(G)$.
 
-> $V =$ {program, declaration, variable_declaration, statement, identifier, expression, expression_statement, if_statement, print_statement, while_statement, block, assignment, logical_or, logical_and, equality, comparison, term, factor, unary}
+> $V =$ {program, declaration, variable_declaration, statement, identifier, expression, expression_statement, if_statement, print_statement, while_statement, block, assignment, logical_or, logical_and, equality, comparison, term, factor, unary, end}
 > 
 > $\sum =$ all ASCII characters
 > 
@@ -14,15 +14,15 @@ The Beeline language syntax, $B$, is defined using a context-free grammar, $G = 
 > 
 > declaration $\rightarrow$ variable_declaration | statement ;
 > 
-> variable_declaration $\rightarrow$ "var" identifier | "var" identifier "=" expression ;
+> variable_declaration $\rightarrow$ "var" identifier | "var" identifier "=" expression end ;
 > 
 > statement $\rightarrow$ expression_statement | if_statement | print_statement | while_statement | block ;
 > 
-> expression_statement $\rightarrow$ expression ;
+> expression_statement $\rightarrow$ expression end ;
 > 
 > if_statement $\rightarrow$ "if" "(" expression ")" statement | "if" "(" expression ")" statement "else" statement ;
 > 
-> print_statement $\rightarrow$ "print" expression ;
+> print_statement $\rightarrow$ "print" expression end ;
 > 
 > while_statement $\rightarrow$ "while" "(" expression ")" statement ;
 > 
@@ -45,6 +45,8 @@ The Beeline language syntax, $B$, is defined using a context-free grammar, $G = 
 > factor $\rightarrow$ unary (("/" | "\*") unary)\*;
 > 
 > unary $\rightarrow$ ("!" | "-") unary ;
+>
+> end $\rightarrow$ "\\n" | EOF ;
 > 
 > $S =$ program
 

@@ -49,6 +49,7 @@ std::ostream& operator<<(std::ostream& os, const Token::Type& type)
         case Token::Type::PLUS: return os << "PLUS";
         case Token::Type::SLASH: return os << "SLASH";
         case Token::Type::STAR: return os << "STAR";
+        case Token::Type::NEWLINE: return os << "NEWLINE";
         case Token::Type::BANG: return os << "BANG";
         case Token::Type::BANG_EQUAL: return os << "BANG_EQUAL";
         case Token::Type::EQUAL: return os << "EQUAL";
@@ -172,6 +173,7 @@ private:
             case '-': add_token(Token::Type::MINUS); break;
             case '+': add_token(Token::Type::PLUS); break;
             case '*': add_token(Token::Type::STAR); break;
+            case '\n': add_token(Token::Type::NEWLINE); break;
             case '!': add_token(try_consume_match('=') ? Token::Type::BANG_EQUAL : Token::Type::BANG); break;
             case '=': add_token(try_consume_match('=') ? Token::Type::EQUAL_EQUAL : Token::Type::EQUAL); break;
             case '<': add_token(try_consume_match('=') ? Token::Type::LESS_EQUAL : Token::Type::LESS); break;
@@ -199,7 +201,6 @@ private:
             case ' ':
             case '\r':
             case '\t':
-            case '\n':
                 break;
             case '"': string(); break;
             default:
