@@ -58,7 +58,7 @@ private:
         {
             return;
         }
-        throw BeelineSyntaxError(message, peek().position);
+        throw BeelineParseError(message, peek());
     }
     void require_match(const Token::Type type, const std::string& message)
     {
@@ -142,3 +142,12 @@ private:
         return expr;
     }
 };
+
+
+BeelineParseError::BeelineParseError(const std::string& message, const Token& token) : BeelineError(message), token(token) {}
+
+
+std::ostream& operator<<(std::ostream& os, const BeelineParseError& bpe)
+{
+    return os << "BeelineParseError: " << bpe.what() << " at " << bpe.token.position;
+}
