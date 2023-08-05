@@ -61,7 +61,7 @@ private:
         while (is_match(types))
         {
             const Token& op = advance();
-            std::unique_ptr<Expression> right = (this->*operand)();
+            const std::unique_ptr<Expression> right = (this->*operand)();
             expression = std::make_unique<Expression::Binary>(std::move(expression), op, std::move(right));
         }
         return expression;
@@ -85,5 +85,15 @@ private:
     std::unique_ptr<Expression> factor()
     {
         return binary(&unary, Associativity::LEFT, {Token::Type::SLASH, Token::Type::STAR});
+    }
+    std::unique_ptr<Expression> unary()
+    {
+        if (is_match({Token::Type::BANG, Token::Type::MINUS}))
+        {
+            const Token& op = advance();
+            const std::unique_ptr<Expression> right = unary();
+            return std::make_unique<Expression::Unary>(op, std::move(right));
+        }
+        return primary();
     }
 };
