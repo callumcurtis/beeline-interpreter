@@ -3,6 +3,7 @@
 #include <initializer_list>
 #include <algorithm>
 #include <cassert>
+#include <string>
 
 #include "parser.hpp"
 #include "ast.hpp"
@@ -51,20 +52,32 @@ private:
     {
         return tokens_.at(current_token_index_++);
     }
+    void require_match(const std::initializer_list<Token::Type> types, const std::string& message)
+    {
+        if (is_match(types))
+        {
+            return;
+        }
+        throw BeelineSyntaxError(message, peek().position);
+    }
+    void require_match(const Token::Type type, const std::string& message)
+    {
+        require_match({type}, message);
+    }
     std::unique_ptr<Expression> binary(
         std::unique_ptr<Expression> (Parser::Impl::*operand)(void),
         const Associativity associativity,
         const std::initializer_list<Token::Type> types
     ) {
         assert(associativity == Associativity::LEFT && "Associativity::RIGHT is not implemented");
-        std::unique_ptr<Expression> expression = (this->*operand)();
+        std::unique_ptr<Expression> expr = (this->*operand)();
         while (is_match(types))
         {
             const Token& op = advance();
             const std::unique_ptr<Expression> right = (this->*operand)();
-            expression = std::make_unique<Expression::Binary>(std::move(expression), op, std::move(right));
+            expr = std::make_unique<Expression::Binary>(std::move(expr), op, std::move(right));
         }
-        return expression;
+        return expr;
     }
     std::unique_ptr<Expression> expression()
     {
@@ -95,5 +108,37 @@ private:
             return std::make_unique<Expression::Unary>(op, std::move(right));
         }
         return primary();
+    }
+    std::unique_ptr<Expression> primary()
+    {
+        const Token& token = advance();
+        std::unique_ptr<Expression> expr;
+        switch (token.type)
+        {
+            case Token::Type::FALSE:
+                expr = std::make_unique<Expression::Literal>(Token::Literal{false});
+                break;
+            case Token::Type::TRUE:
+                expr = std::make_unique<Expression::Literal>(Token::Literal{true});
+                break;
+            case Token::Type::NIL:
+                expr = std::make_unique<Expression::Literal>(Token::Literal{nullptr});
+                break;
+            case Token::Type::NUMBER:
+                expr = std::make_unique<Expression::Literal>(token.literal);
+                break;
+            case Token::Type::STRING:
+                expr = std::make_unique<Expression::Literal>(token.literal);
+                break;
+            case Token::Type::LEFT_PARENTHESIS:
+                expr = expression();
+                require_match(Token::Type::RIGHT_PARENTHESIS, "expected ')' after expression");
+                advance();
+                expr = std::make_unique<Expression::Grouping>(std::move(expr));
+                break;
+            default:
+                assert(false && "invalid primary expression");
+        }
+        return expr;
     }
 };
