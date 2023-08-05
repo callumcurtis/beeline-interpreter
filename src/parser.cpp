@@ -64,6 +64,25 @@ private:
     {
         require_match({type}, message);
     }
+    void recover()
+    {
+        while (!is_done())
+        {
+            const Token& previous = advance();
+            if (previous.type == Token::Type::NEWLINE)
+            {
+                return;
+            }
+            switch (peek().type)
+            {
+                case Token::Type::VAR:
+                case Token::Type::IF:
+                case Token::Type::WHILE:
+                case Token::Type::PRINT:
+                    return;
+            }
+        }
+    }
     std::unique_ptr<Expression> binary(
         std::unique_ptr<Expression> (Parser::Impl::*operand)(void),
         const Associativity associativity,
