@@ -8,6 +8,7 @@
 #include "parser.hpp"
 #include "ast.hpp"
 #include "lexer.hpp"
+#include "logging.hpp"
 
 
 enum struct Associativity
@@ -20,7 +21,21 @@ enum struct Associativity
 class Parser::Impl
 {
 public:
-    Impl(std::vector<Token> tokens) : tokens_(tokens) {}
+    Impl() = delete;
+    Impl(std::vector<Token>& tokens) : tokens_(tokens) {}
+    std::unique_ptr<Expression> parse()
+    {
+        std::unique_ptr<Expression> expr = nullptr;
+        try
+        {
+            expr = expression();
+        }
+        catch (const BeelineParseError& bpe)
+        {
+            log(LoggingLevel::ERROR) << bpe;
+        }
+        return expr;
+    }
 private:
     const std::vector<Token> tokens_;
     std::size_t current_token_index_{0};
@@ -168,6 +183,18 @@ private:
         return expr;
     }
 };
+
+
+Parser::Parser(const std::vector<Token>& tokens) : impl_(std::make_unique<Impl>(tokens)) {}
+
+
+Parser::~Parser() = default;
+
+
+std::unique_ptr<Expression> Parser::parse()
+{
+    return impl_->parse();
+}
 
 
 BeelineParseError::BeelineParseError(const std::string& message, const Token& token) : BeelineError(message), token(token) {}

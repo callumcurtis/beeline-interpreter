@@ -75,8 +75,8 @@ class Lexer
 {
 public:
     Lexer() = delete;
-    ~Lexer();
     Lexer(const std::string& input);
+    ~Lexer();
     const std::vector<Token>& scan();
 private:
     class Impl;

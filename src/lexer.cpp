@@ -116,6 +116,7 @@ std::ostream& operator<<(std::ostream& os, const Token& token)
 class Lexer::Impl
 {
 public:
+    Impl() = delete;
     Impl(const std::string& input) : input_(input) {}
     const std::vector<Token>& scan()
     {

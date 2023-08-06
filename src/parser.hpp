@@ -12,12 +12,12 @@ class Parser
 {
 public:
     Parser() = delete;
-    Parser(std::vector<Token> tokens);
+    Parser(const std::vector<Token>& tokens);
     ~Parser();
     std::unique_ptr<Expression> parse();
 private:
     class Impl;
-    Impl *impl_;
+    std::unique_ptr<Impl> impl_;
 };
 
 
