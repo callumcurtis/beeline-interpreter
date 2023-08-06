@@ -56,18 +56,18 @@ struct Token
 
     struct Position
     {
-        const std::size_t offset;
-        const std::size_t line;
-        const std::size_t column;
-        const std::size_t length;
+        std::size_t offset;
+        std::size_t line;
+        std::size_t column;
+        std::size_t length;
     };
 
     using Literal = std::variant<std::nullptr_t, std::string, double, bool>;
 
-    const Type type;
-    const std::string lexeme;
-    const Literal literal;
-    const Position position;
+    Type type;
+    std::string lexeme;
+    Literal literal;
+    Position position;
 };
 
 
@@ -90,7 +90,7 @@ public:
     BeelineSyntaxError(const std::string& message, const Token::Position& position);
     const Token::Position& position() const noexcept;
 private:
-    const Token::Position position_;
+    Token::Position position_;
 };
 
 

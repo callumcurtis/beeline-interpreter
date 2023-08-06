@@ -20,9 +20,9 @@ std::string build_usage_string(const std::string &process_name, const po::option
 
 struct ArgumentParsingContext
 {
-    const int argc;
+    int argc;
     const char** argv;
-    const po::options_description &desc;
+    po::options_description &desc;
 };
 
 

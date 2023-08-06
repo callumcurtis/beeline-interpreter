@@ -37,7 +37,7 @@ public:
         return expr;
     }
 private:
-    const std::vector<Token> tokens_;
+    std::vector<Token> tokens_;
     std::size_t current_token_index_{0};
     bool is_match(const std::initializer_list<Token::Type> types) const
     {

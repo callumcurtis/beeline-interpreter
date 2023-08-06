@@ -25,9 +25,9 @@ struct Expression::Binary : Expression
 {
     Binary(std::unique_ptr<Expression> left, Token op, std::unique_ptr<Expression> right);
     void accept(Expression::Visitor& visitor) const override;
-    const std::unique_ptr<Expression> left;
-    const Token op;
-    const std::unique_ptr<Expression> right;
+    std::unique_ptr<Expression> left;
+    Token op;
+    std::unique_ptr<Expression> right;
 };
 
 
@@ -35,7 +35,7 @@ struct Expression::Grouping : Expression
 {
     Grouping(std::unique_ptr<Expression> expression);
     void accept(Expression::Visitor& visitor) const override;
-    const std::unique_ptr<Expression> expression;
+    std::unique_ptr<Expression> expression;
 };
 
 
@@ -43,7 +43,7 @@ struct Expression::Literal : Expression
 {
     Literal(Token::Literal value);
     void accept(Expression::Visitor& visitor) const override;
-    const Token::Literal value;
+    Token::Literal value;
 };
 
 
@@ -51,8 +51,8 @@ struct Expression::Unary : Expression
 {
     Unary(Token op, std::unique_ptr<Expression> right);
     void accept(Expression::Visitor& visitor) const override;
-    const Token op;
-    const std::unique_ptr<Expression> right;
+    Token op;
+    std::unique_ptr<Expression> right;
 };
 
 

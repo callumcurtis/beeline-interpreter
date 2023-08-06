@@ -144,7 +144,7 @@ public:
     }
 private:
     static const std::unordered_map<std::string, Token::Type> keyword_to_type_;
-    const std::string input_;
+    std::string input_;
     std::vector<Token> tokens_{};
     std::size_t current_offset_{0};
     std::size_t starting_offset_of_current_token_{0};

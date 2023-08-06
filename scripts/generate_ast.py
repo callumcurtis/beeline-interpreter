@@ -181,7 +181,7 @@ class HppAstMetaProgrammer (AstMetaProgrammer):
     def generate_ast_class_fields(self, t: Type):
         if isinstance(t, ABC):
             return ""
-        return "\n".join([""] + [f"    const {field.type} {field.name};" for field in t.fields])
+        return "\n".join([""] + [f"    {field.type} {field.name};" for field in t.fields])
 
     def generate_ast_class_footer(self, t: Type):
         return "\n};"

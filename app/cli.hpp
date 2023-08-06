@@ -7,9 +7,9 @@
 
 struct Arguments
 {
-    const LoggingLevel logging_level;
-    const bool version;
-    const bool help;
+    LoggingLevel logging_level;
+    bool version;
+    bool help;
 };
 
 

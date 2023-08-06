@@ -27,7 +27,7 @@ class BeelineParseError : public BeelineError
 {
 public:
     BeelineParseError(const std::string& message, const Token& token);
-    const Token token;
+    Token token;
 };
 
 
