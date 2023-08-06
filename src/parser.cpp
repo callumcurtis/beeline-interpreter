@@ -186,15 +186,8 @@ private:
 
 
 Parser::Parser(const std::vector<Token>& tokens) : impl_(std::make_unique<Impl>(tokens)) {}
-
-
 Parser::~Parser() = default;
-
-
-std::unique_ptr<Expression> Parser::parse()
-{
-    return impl_->parse();
-}
+std::unique_ptr<Expression> Parser::parse() { return impl_->parse(); }
 
 
 BeelineParseError::BeelineParseError(const std::string& message, const Token& token) : BeelineError(message), token(token) {}

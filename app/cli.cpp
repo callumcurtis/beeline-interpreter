@@ -163,12 +163,5 @@ private:
 
 
 ArgumentParser::ArgumentParser() : impl_(std::make_unique<Impl>()) {}
-
-
 ArgumentParser::~ArgumentParser() = default;
-
-
-Arguments ArgumentParser::parse(const int argc, const char** argv)
-{
-    return impl_->parse(argc, argv);
-}
+Arguments ArgumentParser::parse(const int argc, const char** argv) { return impl_->parse(argc, argv); }

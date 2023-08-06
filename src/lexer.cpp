@@ -382,12 +382,5 @@ const std::unordered_map<std::string, Token::Type> Lexer::Impl::keyword_to_type_
 
 
 Lexer::Lexer(const std::string& input) : impl_(std::make_unique<Impl>(input)) {}
-
-
 Lexer::~Lexer() = default;
-
-
-const std::vector<Token>& Lexer::scan()
-{
-    return impl_->scan();
-}
+const std::vector<Token>& Lexer::scan() { return impl_->scan(); }

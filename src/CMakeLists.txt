@@ -25,6 +25,7 @@ add_library(beeline_lib
     lexer.cpp
     logging.cpp
     ast/ast.cpp
+    ast/visitor.cpp
     parser.cpp
 )
 
