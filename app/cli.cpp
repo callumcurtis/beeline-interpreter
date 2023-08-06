@@ -162,13 +162,10 @@ private:
 };
 
 
-ArgumentParser::ArgumentParser() : impl_(new Impl()) {}
+ArgumentParser::ArgumentParser() : impl_(std::make_unique<Impl>()) {}
 
 
-ArgumentParser::~ArgumentParser()
-{
-    delete impl_;
-}
+ArgumentParser::~ArgumentParser() = default;
 
 
 Arguments ArgumentParser::parse(const int argc, const char** argv)

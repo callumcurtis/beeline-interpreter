@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "logging.hpp"
 
 
@@ -19,5 +21,5 @@ public:
     Arguments parse(const int argc, const char** argv);
 private:
     class Impl;
-    Impl *impl_;
+    std::unique_ptr<Impl> impl_;
 };
