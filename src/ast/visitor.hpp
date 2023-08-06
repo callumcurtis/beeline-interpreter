@@ -10,7 +10,7 @@ class ExpressionToString : public Expression::Visitor
 public:
     ExpressionToString();
     ~ExpressionToString();
-    std::string result() const;
+    std::string str() const;
     void visit(const Expression::Binary& binary) override;
     void visit(const Expression::Grouping& grouping) override;
     void visit(const Expression::Literal& literal) override;

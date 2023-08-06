@@ -22,6 +22,6 @@ TEST_CASE("tostring")
         );
         ExpressionToString visitor;
         expression->accept(visitor);
-        REQUIRE(visitor.result() == "((- 149.840000) * (true))");
+        REQUIRE(visitor.str() == "((- 149.840000) * (true))");
     }
 }

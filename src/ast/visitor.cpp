@@ -9,7 +9,7 @@
 class ExpressionToString::Impl : public Expression::Visitor
 {
 public:
-    std::string result() const
+    std::string str() const
     {
         return buffer_.str();
     }
@@ -44,7 +44,7 @@ private:
 
 ExpressionToString::ExpressionToString() : impl_{std::make_unique<Impl>()} {}
 ExpressionToString::~ExpressionToString() = default;
-std::string ExpressionToString::result() const { return impl_->result(); }
+std::string ExpressionToString::str() const { return impl_->str(); }
 void ExpressionToString::visit(const Expression::Binary& binary) { impl_->visit(binary); }
 void ExpressionToString::visit(const Expression::Grouping& grouping) { impl_->visit(grouping); }
 void ExpressionToString::visit(const Expression::Literal& literal) { impl_->visit(literal); }

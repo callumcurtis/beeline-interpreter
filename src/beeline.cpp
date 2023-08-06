@@ -1,8 +1,9 @@
 #include "beeline.hpp"
 #include "lexer.hpp"
 #include "logging.hpp"
-#include "ast/ast.hpp"
 #include "parser.hpp"
+#include "ast/ast.hpp"
+#include "ast/visitor.hpp"
 
 
 BeelineError::BeelineError(const std::string& message) : std::runtime_error(message) {}
@@ -25,4 +26,14 @@ void Beeline::run(const std::string& input)
     }
 
     std::unique_ptr<Expression> expr = Parser{tokens}.parse();
+
+    if (expr == nullptr)
+    {
+        return;
+    }
+
+    // TODO: Remove this logging.
+    ExpressionToString visitor;
+    expr->accept(visitor);
+    log(LoggingLevel::DEBUG) << visitor.str();
 }
