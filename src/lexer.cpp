@@ -238,7 +238,15 @@ private:
     }
     void add_token(const Token::Type type, const Token::Literal& literal)
     {
-        tokens_.emplace_back(type, current_token_lexeme(), literal, current_token_position());
+        Token::Position position{current_token_position()};
+        std::string lexeme{current_token_lexeme()};
+        if (type == Token::Type::END_OF_FILE)
+        {
+            assert((current_offset_ == input_.size()) && "must be at end of input when adding EOF token");
+            position = current_position();
+            lexeme = "";
+        }
+        tokens_.emplace_back(type, lexeme, literal, position);
     }
     bool try_consume_match(const char& expected)
     {
@@ -340,6 +348,15 @@ private:
             starting_line_of_current_token_,
             starting_column_of_current_token_,
             current_offset_ - starting_offset_of_current_token_,
+        };
+    }
+    Token::Position current_position() const
+    {
+        return Token::Position{
+            current_offset_,
+            current_line_,
+            current_column_,
+            1,
         };
     }
     std::string current_token_lexeme() const
