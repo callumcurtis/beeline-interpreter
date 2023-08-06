@@ -22,7 +22,7 @@ class Parser::Impl
 {
 public:
     Impl() = delete;
-    Impl(std::vector<Token>& tokens) : tokens_(tokens) {}
+    Impl(const std::vector<Token>& tokens) : tokens_(tokens) {}
     std::unique_ptr<Expression> parse()
     {
         std::unique_ptr<Expression> expr = nullptr;
@@ -115,7 +115,7 @@ private:
         while (is_match(types))
         {
             const Token& op = advance();
-            const std::unique_ptr<Expression> right = (this->*operand)();
+            std::unique_ptr<Expression> right = std::move((this->*operand)());
             expr = std::make_unique<Expression::Binary>(std::move(expr), op, std::move(right));
         }
         return expr;
@@ -126,26 +126,26 @@ private:
     }
     std::unique_ptr<Expression> equality()
     {
-        return binary(&comparison, Associativity::LEFT, {Token::Type::BANG_EQUAL, Token::Type::EQUAL_EQUAL});
+        return binary(&Parser::Impl::comparison, Associativity::LEFT, {Token::Type::BANG_EQUAL, Token::Type::EQUAL_EQUAL});
     }
     std::unique_ptr<Expression> comparison()
     {
-        return binary(&term, Associativity::LEFT, {Token::Type::GREATER, Token::Type::GREATER_EQUAL, Token::Type::LESS, Token::Type::LESS_EQUAL});
+        return binary(&Parser::Impl::term, Associativity::LEFT, {Token::Type::GREATER, Token::Type::GREATER_EQUAL, Token::Type::LESS, Token::Type::LESS_EQUAL});
     }
     std::unique_ptr<Expression> term()
     {
-        return binary(&factor, Associativity::LEFT, {Token::Type::MINUS, Token::Type::PLUS});
+        return binary(&Parser::Impl::factor, Associativity::LEFT, {Token::Type::MINUS, Token::Type::PLUS});
     }
     std::unique_ptr<Expression> factor()
     {
-        return binary(&unary, Associativity::LEFT, {Token::Type::SLASH, Token::Type::STAR});
+        return binary(&Parser::Impl::unary, Associativity::LEFT, {Token::Type::SLASH, Token::Type::STAR});
     }
     std::unique_ptr<Expression> unary()
     {
         if (is_match({Token::Type::BANG, Token::Type::MINUS}))
         {
             const Token& op = advance();
-            const std::unique_ptr<Expression> right = unary();
+            std::unique_ptr<Expression> right = unary();
             return std::make_unique<Expression::Unary>(op, std::move(right));
         }
         return primary();

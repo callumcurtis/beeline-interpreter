@@ -1,6 +1,8 @@
 #include "beeline.hpp"
 #include "lexer.hpp"
 #include "logging.hpp"
+#include "ast.hpp"
+#include "parser.hpp"
 
 
 BeelineError::BeelineError(const std::string& message) : std::runtime_error(message) {}
@@ -14,12 +16,13 @@ std::ostream& operator<<(std::ostream& os, const BeelineError& be)
 
 void Beeline::run(const std::string& input)
 {
-    Lexer lexer{input};
-    std::vector<Token> tokens = lexer.scan();
+    std::vector<Token> tokens = Lexer{input}.scan();
+
     for(const Token& token : tokens)
     {
         // TODO: Remove this logging.
-        log(LoggingLevel::DEBUG) << token << " ";
+        log(LoggingLevel::DEBUG) << token;
     }
-    log(LoggingLevel::DEBUG) << "\n";
+
+    std::unique_ptr<Expression> expr = Parser{tokens}.parse();
 }

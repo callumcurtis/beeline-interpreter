@@ -6,6 +6,8 @@
 #include <memory>
 
 #include "beeline.hpp"
+#include "lexer.hpp"
+#include "ast.hpp"
 
 
 class Parser
