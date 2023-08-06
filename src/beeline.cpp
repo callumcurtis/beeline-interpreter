@@ -1,7 +1,7 @@
 #include "beeline.hpp"
 #include "lexer.hpp"
 #include "logging.hpp"
-#include "ast.hpp"
+#include "ast/ast.hpp"
 #include "parser.hpp"
 
 

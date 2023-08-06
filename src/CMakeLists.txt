@@ -5,17 +5,17 @@ find_package(Boost
 )
 
 add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/ast.hpp
-    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py hpp > ${CMAKE_CURRENT_SOURCE_DIR}/ast.hpp
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/ast/ast.hpp
+    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py hpp > ${CMAKE_CURRENT_SOURCE_DIR}/ast/ast.hpp
     COMMENT "Generating AST header file"
     DEPENDS ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py
     VERBATIM
 )
 
 add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/ast.cpp
-    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py cpp --header \"ast.hpp\" > ${CMAKE_CURRENT_SOURCE_DIR}/ast.cpp
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/ast.hpp ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/ast/ast.cpp
+    COMMAND python ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py cpp --header \"ast/ast.hpp\" > ${CMAKE_CURRENT_SOURCE_DIR}/ast/ast.cpp
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/ast/ast.hpp ${PROJECT_SOURCE_DIR}/scripts/generate_ast.py
     COMMENT "Generating AST source file"
     VERBATIM
 )
@@ -24,7 +24,7 @@ add_library(beeline_lib
     beeline.cpp
     lexer.cpp
     logging.cpp
-    ast.cpp
+    ast/ast.cpp
     parser.cpp
 )
 

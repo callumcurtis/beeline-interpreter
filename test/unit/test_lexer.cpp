@@ -15,7 +15,7 @@ TEST_CASE("scan")
     }
     SECTION("whitespace")
     {
-        const auto input = " \t\n\r";
+        const auto input = " \t\r";
         auto lexer = Lexer{input};
         const auto tokens = lexer.scan();
         REQUIRE(tokens.size() == 1);

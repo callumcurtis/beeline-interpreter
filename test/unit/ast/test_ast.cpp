@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "ast.hpp"
+#include "ast/ast.hpp"
 
 
 class ExpressionToStringVisitor : public Expression::Visitor
