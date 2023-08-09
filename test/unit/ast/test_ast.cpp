@@ -3,7 +3,7 @@
 #include <sstream>
 
 #include "ast/ast.hpp"
-#include "ast/visitor.hpp"
+#include "ast/stringify.hpp"
 
 
 TEST_CASE("tostring")

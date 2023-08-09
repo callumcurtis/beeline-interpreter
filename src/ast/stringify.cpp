@@ -3,7 +3,7 @@
 #include <string>
 
 #include "ast/ast.hpp"
-#include "ast/visitor.hpp"
+#include "ast/stringify.hpp"
 
 
 class ExpressionToString::Impl : public Expression::Visitor

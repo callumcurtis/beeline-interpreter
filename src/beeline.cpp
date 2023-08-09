@@ -3,7 +3,7 @@
 #include "logging.hpp"
 #include "parser.hpp"
 #include "ast/ast.hpp"
-#include "ast/visitor.hpp"
+#include "ast/stringify.hpp"
 
 
 BeelineError::BeelineError(const std::string& message) : std::runtime_error(message) {}
