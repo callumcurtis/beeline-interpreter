@@ -17,32 +17,69 @@ class Interpreter::Impl : public Expression::Visitor, public Statement::Visitor
 public:
     void visit(const Expression::Binary& binary) override
     {
-        binary.left->accept(*this);
-        Token::Literal left = value_;
-
-        binary.right->accept(*this);
-        Token::Literal right = value_;
+        Token::Literal left;
+        Token::Literal right;
 
         switch (binary.op.type)
         {
+            case Token::Type::AND:
+                binary.left->accept(*this);
+                left = value_;
+                require<bool>(left, binary.op, "left operand must be a boolean");
+                // short-circuit evaluation
+                if (std::get<bool>(left))
+                {
+                    binary.right->accept(*this);
+                    right = value_;
+                    require<bool>(right, binary.op, "right operand must be a boolean");
+                }
+                break;
+            case Token::Type::OR:
+                binary.left->accept(*this);
+                left = value_;
+                require<bool>(left, binary.op, "left operand must be a boolean");
+                // short-circuit evaluation
+                if (!std::get<bool>(left))
+                {
+                    binary.right->accept(*this);
+                    right = value_;
+                    require<bool>(right, binary.op, "right operand must be a boolean");
+                }
+                break;
             case Token::Type::MINUS:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
                 value_ = std::get<double>(left) - std::get<double>(right);
                 break;
             case Token::Type::SLASH:
                 // TODO: Handle division by zero.
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
                 value_ = std::get<double>(left) / std::get<double>(right);
                 break;
             case Token::Type::STAR:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
                 value_ = std::get<double>(left) * std::get<double>(right);
                 break;
             case Token::Type::PLUS:
             {
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require_not<std::nullptr_t>(left, binary.op, "left operand must not be null");
                 require_not<std::nullptr_t>(right, binary.op, "right operand must not be null");
                 if (std::holds_alternative<bool>(left) && std::holds_alternative<bool>(right))
@@ -81,29 +118,53 @@ public:
                 break;
             }
             case Token::Type::GREATER:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
                 value_ = std::get<double>(left) > std::get<double>(right);
                 break;
             case Token::Type::GREATER_EQUAL:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
                 value_ = std::get<double>(left) >= std::get<double>(right);
                 break;
             case Token::Type::LESS:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
                 value_ = std::get<double>(left) < std::get<double>(right);
                 break;
             case Token::Type::LESS_EQUAL:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
                 value_ = std::get<double>(left) <= std::get<double>(right);
                 break;
             case Token::Type::BANG_EQUAL:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 value_ = left != right;
                 break;
             case Token::Type::EQUAL_EQUAL:
+                binary.left->accept(*this);
+                left = value_;
+                binary.right->accept(*this);
+                right = value_;
                 value_ = left == right;
                 break;
             default:

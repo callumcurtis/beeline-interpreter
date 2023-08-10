@@ -138,7 +138,7 @@ private:
     }
     std::unique_ptr<Expression> assignment()
     {
-        std::unique_ptr<Expression> expr = equality();
+        std::unique_ptr<Expression> expr = logical_or();
         if (is_match(Token::Type::EQUAL))
         {
             const Token& equals = advance();
@@ -149,6 +149,28 @@ private:
                 return std::make_unique<Expression::Assignment>(variable->name, std::move(value));
             }
             panic("left-hand side of assignment must be a variable", equals);
+        }
+        return expr;
+    }
+    std::unique_ptr<Expression> logical_or()
+    {
+        std::unique_ptr<Expression> expr = logical_and();
+        while (is_match(Token::Type::OR))
+        {
+            const Token& op = advance();
+            std::unique_ptr<Expression> right = logical_and();
+            expr = std::make_unique<Expression::Binary>(std::move(expr), op, std::move(right));
+        }
+        return expr;
+    }
+    std::unique_ptr<Expression> logical_and()
+    {
+        std::unique_ptr<Expression> expr = equality();
+        while (is_match(Token::Type::AND))
+        {
+            const Token& op = advance();
+            std::unique_ptr<Expression> right = equality();
+            expr = std::make_unique<Expression::Binary>(std::move(expr), op, std::move(right));
         }
         return expr;
     }
