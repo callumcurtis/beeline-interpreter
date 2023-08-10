@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #include <string>
+#include <optional>
 
 #include "parser.hpp"
 #include "ast/ast.hpp"
@@ -238,6 +239,9 @@ private:
             case Token::Type::LEFT_BRACE:
                 stmt = block();
                 break;
+            case Token::Type::IF:
+                stmt = if_statement();
+                break;
             default:
                 stmt = expression_statement();
                 break;
@@ -268,6 +272,25 @@ private:
         require_match(Token::Type::RIGHT_BRACE, "expected '}' after block");
         advance();
         return std::make_unique<Statement::Block>(std::move(statements));
+    }
+    std::unique_ptr<Statement> if_statement()
+    {
+        assert(is_match(Token::Type::IF));
+        const Token& if_keyword = advance();
+        require_match(Token::Type::LEFT_PARENTHESIS, "expected '(' after 'if'");
+        advance();
+        std::unique_ptr<Expression> condition = expression();
+        require_match(Token::Type::RIGHT_PARENTHESIS, "expected ')' after if condition");
+        advance();
+        std::unique_ptr<Statement> then_statement = statement();
+        std::optional<Token> else_keyword;
+        std::unique_ptr<Statement> else_statement;
+        if (is_match(Token::Type::ELSE))
+        {
+            else_keyword = advance();
+            else_statement = statement();
+        }
+        return std::make_unique<Statement::IfElse>(std::move(condition), if_keyword, std::move(then_statement), else_keyword, std::move(else_statement));
     }
     std::unique_ptr<Statement> expression_statement()
     {

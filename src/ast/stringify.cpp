@@ -73,6 +73,19 @@ public:
         }
         buffer_ << "}";
     }
+    void visit(const Statement::IfElse& if_else) override
+    {
+        buffer_ << "(if ";
+        if_else.condition->accept(*this);
+        buffer_ << " then ";
+        if_else.then_statement->accept(*this);
+        if (if_else.else_statement)
+        {
+            buffer_ << " else ";
+            if_else.else_statement->accept(*this);
+        }
+        buffer_ << ")";
+    }
 private:
     std::ostringstream buffer_{};
 };
@@ -91,3 +104,4 @@ void ExpressionToString::visit(const Statement::Expression& expression) { impl_-
 void ExpressionToString::visit(const Statement::Print& print) { impl_->visit(print); }
 void ExpressionToString::visit(const Statement::VariableDeclaration& variable_declaration) { impl_->visit(variable_declaration); }
 void ExpressionToString::visit(const Statement::Block& block) { impl_->visit(block); }
+void ExpressionToString::visit(const Statement::IfElse& if_else) { impl_->visit(if_else); }

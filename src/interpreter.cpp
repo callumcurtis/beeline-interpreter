@@ -172,6 +172,20 @@ public:
         }
         value_ = nullptr;
     }
+    void visit(const Statement::IfElse& if_else) override
+    {
+        if_else.condition->accept(*this);
+        require<bool>(value_, if_else.if_keyword, "condition must evaluate to a boolean");
+        if (std::get<bool>(value_))
+        {
+            if_else.then_statement->accept(*this);
+        }
+        else if (if_else.else_statement)
+        {
+            if_else.else_statement->accept(*this);
+        }
+        value_ = nullptr;
+    }
 private:
     Token::Literal value_;
     void panic(const Token& token, const std::string& message) const

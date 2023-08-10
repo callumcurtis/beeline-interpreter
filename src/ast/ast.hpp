@@ -5,6 +5,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include "lexer.hpp"
 
@@ -82,6 +83,7 @@ struct Statement
     class Print;
     class VariableDeclaration;
     class Block;
+    class IfElse;
     virtual ~Statement() = default;
     virtual void accept(Visitor& visitor) const = 0;
 };
@@ -121,6 +123,18 @@ struct Statement::Block : Statement
 };
 
 
+struct Statement::IfElse : Statement
+{
+    IfElse(std::unique_ptr<::Expression> condition, Token if_keyword, std::unique_ptr<Statement> then_statement, std::optional<Token> else_keyword, std::unique_ptr<Statement> else_statement);
+    void accept(Statement::Visitor& visitor) const override;
+    std::unique_ptr<::Expression> condition;
+    Token if_keyword;
+    std::unique_ptr<Statement> then_statement;
+    std::optional<Token> else_keyword;
+    std::unique_ptr<Statement> else_statement;
+};
+
+
 class Expression::Visitor
 {
 public:
@@ -138,6 +152,7 @@ class Statement::Visitor
 public:
     virtual void visit(const Statement::Expression& expression) = 0;
     virtual void visit(const Statement::Print& print) = 0;
-    virtual void visit(const Statement::VariableDeclaration& variabledeclaration) = 0;
+    virtual void visit(const Statement::VariableDeclaration& variable_declaration) = 0;
     virtual void visit(const Statement::Block& block) = 0;
+    virtual void visit(const Statement::IfElse& if_else) = 0;
 };

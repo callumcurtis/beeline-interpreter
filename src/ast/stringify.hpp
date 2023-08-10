@@ -21,6 +21,7 @@ public:
     void visit(const Statement::Print& print) override;
     void visit(const Statement::VariableDeclaration& variable_declaration) override;
     void visit(const Statement::Block& block) override;
+    void visit(const Statement::IfElse& if_else) override;
 private:
     class Impl;
     std::unique_ptr<Impl> impl_;
