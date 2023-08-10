@@ -90,11 +90,11 @@ private:
     {
         require_match({type}, message);
     }
-    void panic(const std::string& message)
+    void panic(const std::string& message) const
     {
         panic(message, peek());
     }
-    void panic(const std::string& message, const Token& token)
+    void panic(const std::string& message, const Token& token) const
     {
         throw BeelineParseError(message, token);
     }

@@ -125,7 +125,7 @@ public:
         add_token(Token::Type::END_OF_FILE);
         if (first_bad_position)
         {
-            throw BeelineSyntaxError("encountered one or more syntax errors", *first_bad_position);
+            panic("encountered one or more syntax errors", *first_bad_position);
         }
         return tokens_;
     }
@@ -139,6 +139,14 @@ private:
     std::size_t starting_line_of_current_token_{1};
     std::size_t current_column_{1};
     std::size_t starting_column_of_current_token_{1};
+    void panic(const std::string& message) const
+    {
+        panic(message, current_token_position());
+    }
+    void panic(const std::string& message, const Token::Position& position) const
+    {
+        throw BeelineSyntaxError(message, position);
+    }
     void scan_remaining_tokens()
     {
         while(!is_done())
@@ -169,7 +177,7 @@ private:
             case '.':
                 if (!std::isdigit(peek()))
                 {
-                    throw BeelineSyntaxError("missing digit after decimal point", current_token_position());
+                    panic("missing digit after decimal point");
                 }
                 number_after_decimal_point();
                 break;
@@ -202,7 +210,7 @@ private:
                 }
                 else
                 {
-                    throw BeelineSyntaxError("unexpected character", current_token_position());
+                    panic("unexpected character");
                 }
         }
     }
@@ -286,7 +294,7 @@ private:
         }
         if (is_done())
         {
-            throw BeelineSyntaxError("unterminated string", current_token_position());
+            panic("unterminated string");
         }
         advance();
         const std::string quoted_string_literal{current_token_lexeme()};
