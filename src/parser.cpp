@@ -26,6 +26,7 @@ public:
     Impl(const std::vector<Token>& tokens) : tokens_(tokens) {}
     std::vector<std::unique_ptr<Statement>> parse()
     {
+        std::optional<Token> first_bad_token;
         std::vector<std::unique_ptr<Statement>> statements;
         while (!is_done())
         {
@@ -35,9 +36,17 @@ public:
             }
             catch (const BeelineParseError& e)
             {
+                if (!first_bad_token)
+                {
+                    first_bad_token = e.token;
+                }
                 log(LoggingLevel::ERROR) << e;
                 recover();
             }
+        }
+        if (first_bad_token)
+        {
+            panic("encountered one or more parsing errors", *first_bad_token);
         }
         return statements;
     }
