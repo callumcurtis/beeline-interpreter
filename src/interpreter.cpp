@@ -147,7 +147,7 @@ private:
     Token::Literal value_;
     void panic(const Token& token, const std::string& message) const
     {
-        throw BeelineRuntimeError(message, token);
+        throw BeelineRuntimeError(message, token.position);
     }
     template <typename T>
     void require(const Token::Literal& value, const Token& token, const std::string& message) const
@@ -200,10 +200,10 @@ void Interpreter::interpret(const std::vector<std::unique_ptr<Statement>> statem
 }
 
 
-BeelineRuntimeError::BeelineRuntimeError(const std::string& message, const Token& token) : BeelineError{message}, token{token} {}
+BeelineRuntimeError::BeelineRuntimeError(const std::string& message, const Token::Position& position) : BeelineError{message}, position{position} {}
 
 
 std::ostream& operator<<(std::ostream& os, const BeelineRuntimeError& bre)
 {
-    return os << "BeelineRuntimeError: " << bre.what() << " at " << bre.token.position;
+    return os << "BeelineRuntimeError: " << bre.what() << " at " << bre.position;
 }

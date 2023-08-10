@@ -88,9 +88,7 @@ class BeelineSyntaxError : public BeelineError
 {
 public:
     BeelineSyntaxError(const std::string& message, const Token::Position& position);
-    const Token::Position& position() const noexcept;
-private:
-    Token::Position position_;
+    Token::Position position;
 };
 
 

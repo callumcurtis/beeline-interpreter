@@ -25,8 +25,8 @@ private:
 class BeelineRuntimeError : public BeelineError
 {
 public:
-    BeelineRuntimeError(const std::string& message, const Token& token);
-    Token token;
+    BeelineRuntimeError(const std::string& message, const Token::Position& position);
+    Token::Position position;
 };
 
 

@@ -13,13 +13,7 @@ constexpr char EOT = '\x04';
 BeelineSyntaxError::BeelineSyntaxError(
     const std::string& message,
     const Token::Position& position
-) : BeelineError(message), position_(position) {}
-
-
-const Token::Position& BeelineSyntaxError::position() const noexcept
-{
-    return position_;
-}
+) : BeelineError(message), position(position) {}
 
 
 BeelineLexingError::BeelineLexingError(const std::string& message) : BeelineError(message) {}
@@ -27,7 +21,7 @@ BeelineLexingError::BeelineLexingError(const std::string& message) : BeelineErro
 
 std::ostream& operator<<(std::ostream& os, const BeelineSyntaxError& bse)
 {
-    return os << "BeelineSyntaxError: " << bse.what() << " at " << bse.position();
+    return os << "BeelineSyntaxError: " << bse.what() << " at " << bse.position;
 }
 
 
