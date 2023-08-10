@@ -5,7 +5,7 @@
 #include "ast/ast.hpp"
 
 
-class ExpressionToString : public Expression::Visitor
+class ExpressionToString : public Expression::Visitor, public Statement::Visitor
 {
 public:
     ExpressionToString();
@@ -15,6 +15,8 @@ public:
     void visit(const Expression::Grouping& grouping) override;
     void visit(const Expression::Literal& literal) override;
     void visit(const Expression::Unary& unary) override;
+    void visit(const Statement::Expression& expression) override;
+    void visit(const Statement::Print& print) override;
 private:
     class Impl;
     std::unique_ptr<Impl> impl_;

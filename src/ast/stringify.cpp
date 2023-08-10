@@ -6,7 +6,7 @@
 #include "ast/stringify.hpp"
 
 
-class ExpressionToString::Impl : public Expression::Visitor
+class ExpressionToString::Impl : public Expression::Visitor, public Statement::Visitor
 {
 public:
     std::string str() const
@@ -37,6 +37,16 @@ public:
         unary.right->accept(*this);
         buffer_ << ")";
     }
+    void visit(const Statement::Expression& expression) override
+    {
+        expression.expression->accept(*this);
+    }
+    void visit(const Statement::Print& print) override
+    {
+        buffer_ << "(print ";
+        print.expression->accept(*this);
+        buffer_ << ")";
+    }
 private:
     std::ostringstream buffer_{};
 };
@@ -49,3 +59,5 @@ void ExpressionToString::visit(const Expression::Binary& binary) { impl_->visit(
 void ExpressionToString::visit(const Expression::Grouping& grouping) { impl_->visit(grouping); }
 void ExpressionToString::visit(const Expression::Literal& literal) { impl_->visit(literal); }
 void ExpressionToString::visit(const Expression::Unary& unary) { impl_->visit(unary); }
+void ExpressionToString::visit(const Statement::Expression& expression) { impl_->visit(expression); }
+void ExpressionToString::visit(const Statement::Print& print) { impl_->visit(print); }

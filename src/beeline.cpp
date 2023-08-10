@@ -20,13 +20,21 @@ void Beeline::run(const std::string& input)
 {
     std::vector<Token> tokens = Lexer{input}.scan();
 
-    for(const Token& token : tokens)
+    for (const Token& token : tokens)
     {
         // TODO: Remove this logging.
         log(LoggingLevel::DEBUG) << token;
     }
 
     std::vector<std::unique_ptr<Statement>> statements = Parser{tokens}.parse();
+
+    for (const std::unique_ptr<Statement>& statement : statements)
+    {
+        // TODO: Remove this logging.
+        ExpressionToString visitor;
+        statement->accept(visitor);
+        log(LoggingLevel::DEBUG) << visitor.str();
+    }
 
     Interpreter{}.interpret(std::move(statements));
 }
