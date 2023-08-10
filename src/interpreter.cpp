@@ -40,19 +40,44 @@ public:
                 value_ = std::get<double>(left) * std::get<double>(right);
                 break;
             case Token::Type::PLUS:
-                if (std::holds_alternative<double>(left) && std::holds_alternative<double>(right))
+            {
+                require_not<std::nullptr_t>(left, binary.op, "left operand must not be null");
+                require_not<std::nullptr_t>(right, binary.op, "right operand must not be null");
+                if (std::holds_alternative<bool>(left) && std::holds_alternative<bool>(right))
                 {
-                    value_ = std::get<double>(left) + std::get<double>(right);
+                    panic(binary.op, "cannot add two booleans");
                 }
-                else if (std::holds_alternative<std::string>(left) && std::holds_alternative<std::string>(right))
+                if (std::holds_alternative<bool>(left))
                 {
+                    to_string(left);
+                }
+                else if (std::holds_alternative<bool>(right))
+                {
+                    to_string(right);
+                }
+                assert(std::holds_alternative<std::string>(left) || std::holds_alternative<double>(left));
+                assert(std::holds_alternative<std::string>(right) || std::holds_alternative<double>(right));
+                const bool is_concatenation = std::holds_alternative<std::string>(left) || std::holds_alternative<std::string>(right);
+                if (is_concatenation)
+                {
+                    if (!std::holds_alternative<std::string>(left))
+                    {
+                        to_string(left);
+                    }
+                    if (!std::holds_alternative<std::string>(right))
+                    {
+                        to_string(right);
+                    }
                     value_ = std::get<std::string>(left) + std::get<std::string>(right);
                 }
                 else
                 {
-                    panic(binary.op, "operands must be two numbers or two strings");
+                    assert(std::holds_alternative<double>(left));
+                    assert(std::holds_alternative<double>(right));
+                    value_ = std::get<double>(left) + std::get<double>(right);
                 }
                 break;
+            }
             case Token::Type::GREATER:
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
@@ -130,6 +155,35 @@ private:
         if (!std::holds_alternative<T>(value))
         {
             panic(token, message);
+        }
+    }
+    template <typename T>
+    void require_not(const Token::Literal& value, const Token& token, const std::string& message) const
+    {
+        if (std::holds_alternative<T>(value))
+        {
+            panic(token, message);
+        }
+    }
+    void to_string(Token::Literal& value) const
+    {
+        if (std::holds_alternative<std::string>(value))
+        {
+            return;
+        }
+        if (std::holds_alternative<double>(value))
+        {
+            value = std::to_string(std::get<double>(value));
+            std::get<std::string>(value).erase(std::get<std::string>(value).find_last_not_of('0') + 1, std::string::npos);
+            std::get<std::string>(value).erase(std::get<std::string>(value).find_last_not_of('.') + 1, std::string::npos);
+        }
+        else if (std::holds_alternative<bool>(value))
+        {
+            value = std::get<bool>(value) ? "true" : "false";
+        }
+        else
+        {
+            assert(false && "unable to convert to string");
         }
     }
 };
