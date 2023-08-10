@@ -16,6 +16,7 @@ public:
     void visit(const Expression::Literal& literal) override;
     void visit(const Expression::Unary& unary) override;
     void visit(const Expression::Variable& variable) override;
+    void visit(const Expression::Assignment& assignment) override;
     void visit(const Statement::Expression& expression) override;
     void visit(const Statement::Print& print) override;
     void visit(const Statement::VariableDeclaration& variable_declaration) override;

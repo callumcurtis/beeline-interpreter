@@ -41,6 +41,12 @@ public:
     {
         buffer_ << variable.name.lexeme;
     }
+    void visit(const Expression::Assignment& assignment) override
+    {
+        buffer_ << "(" << assignment.name.lexeme << " = ";
+        assignment.value->accept(*this);
+        buffer_ << ")";
+    }
     void visit(const Statement::Expression& expression) override
     {
         expression.expression->accept(*this);
@@ -70,6 +76,7 @@ void ExpressionToString::visit(const Expression::Grouping& grouping) { impl_->vi
 void ExpressionToString::visit(const Expression::Literal& literal) { impl_->visit(literal); }
 void ExpressionToString::visit(const Expression::Unary& unary) { impl_->visit(unary); }
 void ExpressionToString::visit(const Expression::Variable& variable) { impl_->visit(variable); }
+void ExpressionToString::visit(const Expression::Assignment& assignment) { impl_->visit(assignment); }
 void ExpressionToString::visit(const Statement::Expression& expression) { impl_->visit(expression); }
 void ExpressionToString::visit(const Statement::Print& print) { impl_->visit(print); }
 void ExpressionToString::visit(const Statement::VariableDeclaration& variable_declaration) { impl_->visit(variable_declaration); }

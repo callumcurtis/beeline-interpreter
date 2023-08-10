@@ -138,6 +138,11 @@ public:
     {
         value_ = environment_.get(variable.name.lexeme, variable.name.position);
     }
+    void visit(const Expression::Assignment& assignment) override
+    {
+        assignment.value->accept(*this);
+        environment_.assign(assignment.name.lexeme, value_, assignment.name.position);
+    }
     void visit(const Statement::Expression& expression) override
     {
         expression.expression->accept(*this);

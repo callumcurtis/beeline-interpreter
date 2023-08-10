@@ -135,7 +135,23 @@ private:
     }
     std::unique_ptr<Expression> expression()
     {
-        return equality();
+        return assignment();
+    }
+    std::unique_ptr<Expression> assignment()
+    {
+        std::unique_ptr<Expression> expr = equality();
+        if (is_match(Token::Type::EQUAL))
+        {
+            const Token& equals = advance();
+            // Finish parsing right-hand side since assignment is right-associative
+            std::unique_ptr<Expression> value = assignment();
+            if (Expression::Variable* variable = dynamic_cast<Expression::Variable*>(expr.get()))
+            {
+                return std::make_unique<Expression::Assignment>(variable->name, std::move(value));
+            }
+            panic("left-hand side of assignment must be a variable", equals);
+        }
+        return expr;
     }
     std::unique_ptr<Expression> equality()
     {

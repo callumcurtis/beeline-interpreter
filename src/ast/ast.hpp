@@ -17,6 +17,7 @@ struct Expression
     class Literal;
     class Unary;
     class Variable;
+    class Assignment;
     virtual ~Expression() = default;
     virtual void accept(Visitor& visitor) const = 0;
 };
@@ -65,6 +66,15 @@ struct Expression::Variable : Expression
 };
 
 
+struct Expression::Assignment : Expression
+{
+    Assignment(Token name, std::unique_ptr<::Expression> value);
+    void accept(Expression::Visitor& visitor) const override;
+    Token name;
+    std::unique_ptr<::Expression> value;
+};
+
+
 struct Statement
 {
     class Visitor;
@@ -110,6 +120,7 @@ public:
     virtual void visit(const Expression::Literal& literal) = 0;
     virtual void visit(const Expression::Unary& unary) = 0;
     virtual void visit(const Expression::Variable& variable) = 0;
+    virtual void visit(const Expression::Assignment& assignment) = 0;
 };
 
 

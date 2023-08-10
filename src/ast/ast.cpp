@@ -25,6 +25,10 @@ Expression::Variable::Variable(Token name) : name{std::move(name)} {}
 void Expression::Variable::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
+Expression::Assignment::Assignment(Token name, std::unique_ptr<::Expression> value) : name{std::move(name)}, value{std::move(value)} {}
+void Expression::Assignment::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
+
+
 Statement::Expression::Expression(std::unique_ptr<::Expression> expression) : expression{std::move(expression)} {}
 void Statement::Expression::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
 
