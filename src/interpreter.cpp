@@ -8,6 +8,7 @@
 #include "lexer.hpp"
 #include "ast/ast.hpp"
 #include "interpreter.hpp"
+#include "environment.hpp"
 
 
 class Interpreter::Impl : public Expression::Visitor, public Statement::Visitor
@@ -133,6 +134,10 @@ public:
                 assert(false && "unhandled unary operator");
         }
     }
+    void visit(const Expression::Variable& variable) override
+    {
+        value_ = environment_.get(variable.name.lexeme, variable.name.position);
+    }
     void visit(const Statement::Expression& expression) override
     {
         expression.expression->accept(*this);
@@ -142,6 +147,15 @@ public:
         print.expression->accept(*this);
         require<std::string>(value_, print.keyword, "operand must be a string");
         std::cout << std::get<std::string>(value_);
+    }
+    void visit(const Statement::VariableDeclaration& variable_declaration) override
+    {
+        value_ = nullptr;
+        if (variable_declaration.initializer)
+        {
+            variable_declaration.initializer->accept(*this);
+        }
+        environment_.define(variable_declaration.name.lexeme, value_, variable_declaration.name.position);
     }
 private:
     Token::Literal value_;
@@ -186,6 +200,8 @@ private:
             assert(false && "unable to convert to string");
         }
     }
+private:
+    Environment environment_;
 };
 
 

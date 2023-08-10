@@ -28,6 +28,7 @@ add_library(beeline_lib
     ast/stringify.cpp
     parser.cpp
     interpreter.cpp
+    environment.cpp
 )
 
 target_include_directories(beeline_lib

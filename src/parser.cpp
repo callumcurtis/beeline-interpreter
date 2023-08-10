@@ -203,7 +203,6 @@ private:
         std::unique_ptr<Statement> stmt;
         if (is_match(Token::Type::VAR))
         {
-            advance();
             stmt = variable_declaration();
         }
         else
