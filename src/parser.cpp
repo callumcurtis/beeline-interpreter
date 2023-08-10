@@ -23,18 +23,14 @@ class Parser::Impl
 public:
     Impl() = delete;
     Impl(const std::vector<Token>& tokens) : tokens_(tokens) {}
-    std::unique_ptr<Expression> parse()
+    std::vector<std::unique_ptr<Statement>> parse()
     {
-        std::unique_ptr<Expression> expr = nullptr;
-        try
+        std::vector<std::unique_ptr<Statement>> statements;
+        while (!is_done())
         {
-            expr = expression();
+            statements.push_back(statement());
         }
-        catch (const BeelineParseError& bpe)
-        {
-            log(LoggingLevel::ERROR) << bpe;
-        }
-        return expr;
+        return statements;
     }
 private:
     std::vector<Token> tokens_;
@@ -182,12 +178,41 @@ private:
         }
         return expr;
     }
+    std::unique_ptr<Statement> statement()
+    {
+        std::unique_ptr<Statement> stmt;
+        if (is_match(Token::Type::PRINT))
+        {
+            stmt = print_statement();
+        }
+        else
+        {
+            stmt = expression_statement();
+        }
+        return stmt;
+    }
+    std::unique_ptr<Statement> print_statement()
+    {
+        assert(is_match(Token::Type::PRINT));
+        const Token& keyword = advance();
+        std::unique_ptr<Expression> expr = expression();
+        require_match(Token::Type::NEWLINE, "expected newline after expression");
+        advance();
+        return std::make_unique<Statement::Print>(keyword, std::move(expr));
+    }
+    std::unique_ptr<Statement> expression_statement()
+    {
+        std::unique_ptr<Expression> expr = expression();
+        require_match(Token::Type::NEWLINE, "expected newline after expression");
+        advance();
+        return std::make_unique<Statement::Expression>(std::move(expr));
+    }
 };
 
 
 Parser::Parser(const std::vector<Token>& tokens) : impl_(std::make_unique<Impl>(tokens)) {}
 Parser::~Parser() = default;
-std::unique_ptr<Expression> Parser::parse() { return impl_->parse(); }
+std::vector<std::unique_ptr<Statement>> Parser::parse() { return impl_->parse(); }
 
 
 BeelineParseError::BeelineParseError(const std::string& message, const Token& token) : BeelineError(message), token(token) {}

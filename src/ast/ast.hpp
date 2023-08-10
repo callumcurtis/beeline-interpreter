@@ -68,17 +68,18 @@ struct Statement
 
 struct Statement::Expression : Statement
 {
-    Expression(std::unique_ptr<Expression> expression);
+    Expression(std::unique_ptr<::Expression> expression);
     void accept(Statement::Visitor& visitor) const override;
-    std::unique_ptr<Expression> expression;
+    std::unique_ptr<::Expression> expression;
 };
 
 
 struct Statement::Print : Statement
 {
-    Print(std::unique_ptr<Expression> expression);
+    Print(Token keyword, std::unique_ptr<::Expression> expression);
     void accept(Statement::Visitor& visitor) const override;
-    std::unique_ptr<Expression> expression;
+    Token keyword;
+    std::unique_ptr<::Expression> expression;
 };
 
 

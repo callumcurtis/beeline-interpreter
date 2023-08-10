@@ -3,6 +3,7 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <vector>
 
 #include "beeline.hpp"
 #include "lexer.hpp"
@@ -14,7 +15,7 @@ class Interpreter
 public:
     Interpreter();
     ~Interpreter();
-    void interpret(std::unique_ptr<Expression> expression);
+    void interpret(const std::vector<std::unique_ptr<Statement>> statements);
 private:
     class Impl;
     std::unique_ptr<Impl> impl_;

@@ -26,17 +26,7 @@ void Beeline::run(const std::string& input)
         log(LoggingLevel::DEBUG) << token;
     }
 
-    std::unique_ptr<Expression> expr = Parser{tokens}.parse();
+    std::vector<std::unique_ptr<Statement>> statements = Parser{tokens}.parse();
 
-    if (expr == nullptr)
-    {
-        return;
-    }
-
-    // TODO: Remove this logging.
-    ExpressionToString visitor;
-    expr->accept(visitor);
-    log(LoggingLevel::DEBUG) << visitor.str();
-
-    Interpreter{}.interpret(std::move(expr));
+    Interpreter{}.interpret(std::move(statements));
 }

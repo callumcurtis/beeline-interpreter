@@ -16,7 +16,7 @@ public:
     Parser() = delete;
     Parser(const std::vector<Token>& tokens);
     ~Parser();
-    std::unique_ptr<Expression> parse();
+    std::vector<std::unique_ptr<Statement>> parse();
 private:
     class Impl;
     std::unique_ptr<Impl> impl_;

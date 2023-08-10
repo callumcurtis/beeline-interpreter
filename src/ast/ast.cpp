@@ -21,9 +21,9 @@ Expression::Unary::Unary(Token op, std::unique_ptr<Expression> right) : op{std::
 void Expression::Unary::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
-Statement::Expression::Expression(std::unique_ptr<Expression> expression) : expression{std::move(expression)} {}
+Statement::Expression::Expression(std::unique_ptr<::Expression> expression) : expression{std::move(expression)} {}
 void Statement::Expression::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
 
 
-Statement::Print::Print(std::unique_ptr<Expression> expression) : expression{std::move(expression)} {}
+Statement::Print::Print(Token keyword, std::unique_ptr<::Expression> expression) : keyword{std::move(keyword)}, expression{std::move(expression)} {}
 void Statement::Print::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
