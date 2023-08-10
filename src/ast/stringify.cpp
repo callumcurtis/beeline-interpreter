@@ -59,8 +59,12 @@ public:
     }
     void visit(const Statement::VariableDeclaration& variable_declaration) override
     {
-        buffer_ << "(var " << variable_declaration.name.lexeme << " = ";
-        variable_declaration.initializer->accept(*this);
+        buffer_ << "(var " << variable_declaration.name.lexeme;
+        if (variable_declaration.initializer)
+        {
+            buffer_ << " = ";
+            variable_declaration.initializer->accept(*this);
+        }
         buffer_ << ")";
     }
     void visit(const Statement::Block& block) override
