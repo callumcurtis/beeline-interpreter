@@ -63,6 +63,16 @@ public:
         variable_declaration.initializer->accept(*this);
         buffer_ << ")";
     }
+    void visit(const Statement::Block& block) override
+    {
+        buffer_ << "{";
+        for (const auto& statement : block.statements)
+        {
+            statement->accept(*this);
+            buffer_ << " ";
+        }
+        buffer_ << "}";
+    }
 private:
     std::ostringstream buffer_{};
 };
@@ -80,3 +90,4 @@ void ExpressionToString::visit(const Expression::Assignment& assignment) { impl_
 void ExpressionToString::visit(const Statement::Expression& expression) { impl_->visit(expression); }
 void ExpressionToString::visit(const Statement::Print& print) { impl_->visit(print); }
 void ExpressionToString::visit(const Statement::VariableDeclaration& variable_declaration) { impl_->visit(variable_declaration); }
+void ExpressionToString::visit(const Statement::Block& block) { impl_->visit(block); }

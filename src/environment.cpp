@@ -9,8 +9,9 @@
 class Environment::Impl
 {
 public:
-    Impl() = default;
-    Impl(std::unique_ptr<Impl> parent) : parent_{std::move(parent)} {}
+    void nested(Impl* parent) {
+        parent_ = parent;
+    }
     void define(const std::string& name, const Token::Literal& value, const Token::Position& position)
     {
         if (values_.contains(name))
@@ -53,7 +54,7 @@ public:
     }
 private:
     std::unordered_map<std::string, Token::Literal> values_;
-    std::unique_ptr<Impl> parent_;
+    Impl* parent_;
     void panic(const std::string& message, const Token::Position& position) const
     {
         throw BeelineRuntimeError(message, position);
@@ -62,8 +63,34 @@ private:
 
 
 Environment::Environment() : impl_{std::make_unique<Impl>()} {}
-Environment::Environment(std::unique_ptr<Environment> parent) : impl_{std::make_unique<Impl>(std::move(parent->impl_))} {}
 Environment::~Environment() = default;
-void Environment::define(const std::string& name, const Token::Literal& value, const Token::Position& position) { impl_->define(name, value, position); }
-void Environment::assign(const std::string& name, const Token::Literal& value, const Token::Position& position) { impl_->assign(name, value, position); }
-Token::Literal Environment::get(const std::string& name, const Token::Position& position) const { return impl_->get(name, position); }
+Environment::Environment(const Environment& other) : impl_{std::make_unique<Impl>(*other.impl_)} {}
+Environment::Environment(Environment&& other)
+{
+    impl_ = std::move(other.impl_);
+}
+Environment& Environment::operator=(const Environment& other)
+{
+    *impl_ = *other.impl_;
+    return *this;
+}
+Environment& Environment::operator=(Environment&& other)
+{
+    impl_ = std::move(other.impl_);
+    return *this;
+}
+Environment& Environment::nested(Environment& parent)
+{
+    impl_->nested(parent.impl_.get());
+    return *this;
+}
+void Environment::define(const std::string& name, const Token::Literal& value, const Token::Position& position)
+{
+    impl_->define(name, value, position);
+}
+void Environment::assign(const std::string& name, const Token::Literal& value, const Token::Position& position) {
+    impl_->assign(name, value, position);
+}
+Token::Literal Environment::get(const std::string& name, const Token::Position& position) const {
+    return impl_->get(name, position);
+}

@@ -9,6 +9,7 @@
 #include "ast/ast.hpp"
 #include "interpreter.hpp"
 #include "environment.hpp"
+#include "replace.hpp"
 
 
 class Interpreter::Impl : public Expression::Visitor, public Statement::Visitor
@@ -161,6 +162,15 @@ public:
             variable_declaration.initializer->accept(*this);
         }
         environment_.define(variable_declaration.name.lexeme, value_, variable_declaration.name.position);
+    }
+    void visit(const Statement::Block& block) override
+    {
+        ScopedReplace replacer(environment_, Environment{}.nested(environment_));
+        for (const std::unique_ptr<Statement>& statement : block.statements)
+        {
+            statement->accept(*this);
+        }
+        value_ = nullptr;
     }
 private:
     Token::Literal value_;

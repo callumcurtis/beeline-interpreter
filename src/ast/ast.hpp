@@ -68,10 +68,10 @@ struct Expression::Variable : Expression
 
 struct Expression::Assignment : Expression
 {
-    Assignment(Token name, std::unique_ptr<::Expression> value);
+    Assignment(Token name, std::unique_ptr<Expression> value);
     void accept(Expression::Visitor& visitor) const override;
     Token name;
-    std::unique_ptr<::Expression> value;
+    std::unique_ptr<Expression> value;
 };
 
 
@@ -81,6 +81,7 @@ struct Statement
     class Expression;
     class Print;
     class VariableDeclaration;
+    class Block;
     virtual ~Statement() = default;
     virtual void accept(Visitor& visitor) const = 0;
 };
@@ -112,6 +113,14 @@ struct Statement::VariableDeclaration : Statement
 };
 
 
+struct Statement::Block : Statement
+{
+    Block(std::vector<std::unique_ptr<Statement>> statements);
+    void accept(Statement::Visitor& visitor) const override;
+    std::vector<std::unique_ptr<Statement>> statements;
+};
+
+
 class Expression::Visitor
 {
 public:
@@ -130,4 +139,5 @@ public:
     virtual void visit(const Statement::Expression& expression) = 0;
     virtual void visit(const Statement::Print& print) = 0;
     virtual void visit(const Statement::VariableDeclaration& variabledeclaration) = 0;
+    virtual void visit(const Statement::Block& block) = 0;
 };

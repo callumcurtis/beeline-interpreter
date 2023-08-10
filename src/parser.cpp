@@ -26,7 +26,6 @@ public:
     std::vector<std::unique_ptr<Statement>> parse()
     {
         std::vector<std::unique_ptr<Statement>> statements;
-        consume_newlines();
         while (!is_done())
         {
             try
@@ -38,7 +37,6 @@ public:
                 log(LoggingLevel::ERROR) << e;
                 recover();
             }
-            consume_newlines();
         }
         return statements;
     }
@@ -216,6 +214,7 @@ private:
     }
     std::unique_ptr<Statement> declaration()
     {
+        consume_newlines();
         std::unique_ptr<Statement> stmt;
         if (is_match(Token::Type::VAR))
         {
@@ -225,18 +224,23 @@ private:
         {
             stmt = statement();
         }
+        consume_newlines();
         return stmt;
     }
     std::unique_ptr<Statement> statement()
     {
         std::unique_ptr<Statement> stmt;
-        if (is_match(Token::Type::PRINT))
+        switch (peek().type)
         {
-            stmt = print_statement();
-        }
-        else
-        {
-            stmt = expression_statement();
+            case Token::Type::PRINT:
+                stmt = print_statement();
+                break;
+            case Token::Type::LEFT_BRACE:
+                stmt = block();
+                break;
+            default:
+                stmt = expression_statement();
+                break;
         }
         return stmt;
     }
@@ -247,17 +251,30 @@ private:
         std::unique_ptr<Expression> expr = expression();
         if (!is_done())
         {
-            require_match({Token::Type::NEWLINE}, "expected newline or EOF after expression");
+            require_match(Token::Type::NEWLINE, "expected newline or EOF after expression");
             advance();
         }
         return std::make_unique<Statement::Print>(keyword, std::move(expr));
+    }
+    std::unique_ptr<Statement> block()
+    {
+        assert(is_match(Token::Type::LEFT_BRACE));
+        advance();
+        std::vector<std::unique_ptr<Statement>> statements;
+        while (!is_match(Token::Type::RIGHT_BRACE) && !is_done())
+        {
+            statements.push_back(declaration());
+        }
+        require_match(Token::Type::RIGHT_BRACE, "expected '}' after block");
+        advance();
+        return std::make_unique<Statement::Block>(std::move(statements));
     }
     std::unique_ptr<Statement> expression_statement()
     {
         std::unique_ptr<Expression> expr = expression();
         if (!is_done())
         {
-            require_match({Token::Type::NEWLINE}, "expected newline or EOF after expression");
+            require_match(Token::Type::NEWLINE, "expected newline or EOF after expression");
             advance();
         }
         return std::make_unique<Statement::Expression>(std::move(expr));

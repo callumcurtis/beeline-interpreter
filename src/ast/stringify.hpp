@@ -20,6 +20,7 @@ public:
     void visit(const Statement::Expression& expression) override;
     void visit(const Statement::Print& print) override;
     void visit(const Statement::VariableDeclaration& variable_declaration) override;
+    void visit(const Statement::Block& block) override;
 private:
     class Impl;
     std::unique_ptr<Impl> impl_;

@@ -25,7 +25,7 @@ Expression::Variable::Variable(Token name) : name{std::move(name)} {}
 void Expression::Variable::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
-Expression::Assignment::Assignment(Token name, std::unique_ptr<::Expression> value) : name{std::move(name)}, value{std::move(value)} {}
+Expression::Assignment::Assignment(Token name, std::unique_ptr<Expression> value) : name{std::move(name)}, value{std::move(value)} {}
 void Expression::Assignment::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
@@ -39,3 +39,7 @@ void Statement::Print::accept(Statement::Visitor& visitor) const { visitor.visit
 
 Statement::VariableDeclaration::VariableDeclaration(Token name, std::unique_ptr<::Expression> initializer) : name{std::move(name)}, initializer{std::move(initializer)} {}
 void Statement::VariableDeclaration::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
+
+
+Statement::Block::Block(std::vector<std::unique_ptr<Statement>> statements) : statements{std::move(statements)} {}
+void Statement::Block::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
