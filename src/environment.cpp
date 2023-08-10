@@ -9,6 +9,8 @@
 class Environment::Impl
 {
 public:
+    Impl() = default;
+    Impl(std::unique_ptr<Impl> parent) : parent_{std::move(parent)} {}
     void define(const std::string& name, const Token::Literal& value, const Token::Position& position)
     {
         if (values_.contains(name))
@@ -19,22 +21,39 @@ public:
     }
     void assign(const std::string& name, const Token::Literal& value, const Token::Position& position)
     {
-        if (!values_.contains(name))
+        if (values_.contains(name))
+        {
+            values_[name] = value;
+        }
+        else if (parent_)
+        {
+            parent_->assign(name, value, position);
+        }
+        else
         {
             panic("variable '" + name + "' is undefined", position);
         }
-        values_[name] = value;
     }
-    Token::Literal& get(const std::string& name, const Token::Position& position)
+    Token::Literal get(const std::string& name, const Token::Position& position) const
     {
-        if (!values_.contains(name))
+        Token::Literal value;
+        if (values_.contains(name))
+        {
+            value = values_.at(name);
+        }
+        else if (parent_)
+        {
+            value = parent_->get(name, position);
+        }
+        else
         {
             panic("variable '" + name + "' is undefined", position);
         }
-        return values_.at(name);
+        return value;
     }
 private:
-    std::unordered_map<std::string, Token::Literal> values_{};
+    std::unordered_map<std::string, Token::Literal> values_;
+    std::unique_ptr<Impl> parent_;
     void panic(const std::string& message, const Token::Position& position) const
     {
         throw BeelineRuntimeError(message, position);
@@ -43,7 +62,8 @@ private:
 
 
 Environment::Environment() : impl_{std::make_unique<Impl>()} {}
+Environment::Environment(std::unique_ptr<Environment> parent) : impl_{std::make_unique<Impl>(std::move(parent->impl_))} {}
 Environment::~Environment() = default;
 void Environment::define(const std::string& name, const Token::Literal& value, const Token::Position& position) { impl_->define(name, value, position); }
 void Environment::assign(const std::string& name, const Token::Literal& value, const Token::Position& position) { impl_->assign(name, value, position); }
-Token::Literal& Environment::get(const std::string& name, const Token::Position& position) { return impl_->get(name, position); }
+Token::Literal Environment::get(const std::string& name, const Token::Position& position) const { return impl_->get(name, position); }
