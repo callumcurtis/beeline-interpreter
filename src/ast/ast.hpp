@@ -84,6 +84,7 @@ struct Statement
     class VariableDeclaration;
     class Block;
     class IfElse;
+    class WhileLoop;
     virtual ~Statement() = default;
     virtual void accept(Visitor& visitor) const = 0;
 };
@@ -135,6 +136,16 @@ struct Statement::IfElse : Statement
 };
 
 
+struct Statement::WhileLoop : Statement
+{
+    WhileLoop(Token keyword, std::unique_ptr<::Expression> condition, std::unique_ptr<Statement> body);
+    void accept(Statement::Visitor& visitor) const override;
+    Token keyword;
+    std::unique_ptr<::Expression> condition;
+    std::unique_ptr<Statement> body;
+};
+
+
 class Expression::Visitor
 {
 public:
@@ -155,4 +166,5 @@ public:
     virtual void visit(const Statement::VariableDeclaration& variable_declaration) = 0;
     virtual void visit(const Statement::Block& block) = 0;
     virtual void visit(const Statement::IfElse& if_else) = 0;
+    virtual void visit(const Statement::WhileLoop& while_loop) = 0;
 };

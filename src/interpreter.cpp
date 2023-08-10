@@ -247,6 +247,20 @@ public:
         }
         value_ = nullptr;
     }
+    void visit(const Statement::WhileLoop& while_loop) override
+    {
+        auto check_condition = [&]() -> bool
+        {
+            while_loop.condition->accept(*this);
+            require<bool>(value_, while_loop.keyword, "condition must evaluate to a boolean");
+            return std::get<bool>(value_);
+        };
+        while (check_condition())
+        {
+            while_loop.body->accept(*this);
+        }
+        value_ = nullptr;
+    }
 private:
     Token::Literal value_;
     void panic(const Token& token, const std::string& message) const

@@ -86,6 +86,14 @@ public:
         }
         buffer_ << ")";
     }
+    void visit(const Statement::WhileLoop& while_loop) override
+    {
+        buffer_ << "(while ";
+        while_loop.condition->accept(*this);
+        buffer_ << " do ";
+        while_loop.body->accept(*this);
+        buffer_ << ")";
+    }
 private:
     std::ostringstream buffer_{};
 };
@@ -105,3 +113,4 @@ void ExpressionToString::visit(const Statement::Print& print) { impl_->visit(pri
 void ExpressionToString::visit(const Statement::VariableDeclaration& variable_declaration) { impl_->visit(variable_declaration); }
 void ExpressionToString::visit(const Statement::Block& block) { impl_->visit(block); }
 void ExpressionToString::visit(const Statement::IfElse& if_else) { impl_->visit(if_else); }
+void ExpressionToString::visit(const Statement::WhileLoop& while_loop) { impl_->visit(while_loop); }

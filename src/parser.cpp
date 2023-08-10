@@ -264,6 +264,9 @@ private:
             case Token::Type::IF:
                 stmt = if_statement();
                 break;
+            case Token::Type::WHILE:
+                stmt = while_statement();
+                break;
             default:
                 stmt = expression_statement();
                 break;
@@ -313,6 +316,18 @@ private:
             else_statement = statement();
         }
         return std::make_unique<Statement::IfElse>(std::move(condition), if_keyword, std::move(then_statement), else_keyword, std::move(else_statement));
+    }
+    std::unique_ptr<Statement> while_statement()
+    {
+        assert(is_match(Token::Type::WHILE));
+        const Token& keyword = advance();
+        require_match(Token::Type::LEFT_PARENTHESIS, "expected '(' after 'while'");
+        advance();
+        std::unique_ptr<Expression> condition = expression();
+        require_match(Token::Type::RIGHT_PARENTHESIS, "expected ')' after while condition");
+        advance();
+        std::unique_ptr<Statement> body = statement();
+        return std::make_unique<Statement::WhileLoop>(keyword, std::move(condition), std::move(body));
     }
     std::unique_ptr<Statement> expression_statement()
     {

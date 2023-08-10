@@ -22,6 +22,7 @@ public:
     void visit(const Statement::VariableDeclaration& variable_declaration) override;
     void visit(const Statement::Block& block) override;
     void visit(const Statement::IfElse& if_else) override;
+    void visit(const Statement::WhileLoop& while_loop) override;
 private:
     class Impl;
     std::unique_ptr<Impl> impl_;

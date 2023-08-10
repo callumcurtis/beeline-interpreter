@@ -59,6 +59,7 @@ TYPES = [
     Type("VariableDeclaration", [Field("name", "Token"), Field("initializer", "std::unique_ptr<::Expression>")], STATEMENT),
     Type("Block", [Field("statements", "std::vector<std::unique_ptr<Statement>>")], STATEMENT),
     Type("IfElse", [Field("condition", "std::unique_ptr<::Expression>"), Field("if_keyword", "Token"), Field("then_statement", "std::unique_ptr<Statement>"), Field("else_keyword", "std::optional<Token>"), Field("else_statement", "std::unique_ptr<Statement>")], STATEMENT),
+    Type("WhileLoop", [Field("keyword", "Token"), Field("condition", "std::unique_ptr<::Expression>"), Field("body", "std::unique_ptr<Statement>")], STATEMENT),
 ]
 
 

@@ -49,3 +49,7 @@ void Statement::Block::accept(Statement::Visitor& visitor) const { visitor.visit
 
 Statement::IfElse::IfElse(std::unique_ptr<::Expression> condition, Token if_keyword, std::unique_ptr<Statement> then_statement, std::optional<Token> else_keyword, std::unique_ptr<Statement> else_statement) : condition{std::move(condition)}, if_keyword{std::move(if_keyword)}, then_statement{std::move(then_statement)}, else_keyword{std::move(else_keyword)}, else_statement{std::move(else_statement)} {}
 void Statement::IfElse::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
+
+
+Statement::WhileLoop::WhileLoop(Token keyword, std::unique_ptr<::Expression> condition, std::unique_ptr<Statement> body) : keyword{std::move(keyword)}, condition{std::move(condition)}, body{std::move(body)} {}
+void Statement::WhileLoop::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
