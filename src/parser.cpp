@@ -26,15 +26,24 @@ public:
     std::vector<std::unique_ptr<Statement>> parse()
     {
         std::vector<std::unique_ptr<Statement>> statements;
+        consume_newlines();
         while (!is_done())
         {
             statements.push_back(statement());
+            consume_newlines();
         }
         return statements;
     }
 private:
     std::vector<Token> tokens_;
     std::size_t current_token_index_{0};
+    void consume_newlines()
+    {
+        while (is_match(Token::Type::NEWLINE))
+        {
+            advance();
+        }
+    }
     bool is_match(const std::initializer_list<Token::Type> types) const
     {
         return std::any_of(
@@ -196,15 +205,21 @@ private:
         assert(is_match(Token::Type::PRINT));
         const Token& keyword = advance();
         std::unique_ptr<Expression> expr = expression();
-        require_match(Token::Type::NEWLINE, "expected newline after expression");
-        advance();
+        if (!is_done())
+        {
+            require_match({Token::Type::NEWLINE}, "expected newline or EOF after expression");
+            advance();
+        }
         return std::make_unique<Statement::Print>(keyword, std::move(expr));
     }
     std::unique_ptr<Statement> expression_statement()
     {
         std::unique_ptr<Expression> expr = expression();
-        require_match(Token::Type::NEWLINE, "expected newline after expression");
-        advance();
+        if (!is_done())
+        {
+            require_match({Token::Type::NEWLINE}, "expected newline or EOF after expression");
+            advance();
+        }
         return std::make_unique<Statement::Expression>(std::move(expr));
     }
 };
