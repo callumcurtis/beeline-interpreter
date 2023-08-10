@@ -41,6 +41,7 @@ class ABC:
 
 
 EXPRESSION = ABC("Expression")
+STATEMENT = ABC("Statement")
 
 
 TYPES = [
@@ -49,6 +50,9 @@ TYPES = [
     Type("Grouping", [Field("expression", "std::unique_ptr<Expression>")], EXPRESSION),
     Type("Literal", [Field("value", "Token::Literal")], EXPRESSION),
     Type("Unary", [Field("op", "Token"), Field("right", "std::unique_ptr<Expression>")], EXPRESSION),
+    STATEMENT,
+    Type("Expression", [Field("expression", "std::unique_ptr<Expression>")], STATEMENT),
+    Type("Print", [Field("expression", "std::unique_ptr<Expression>")], STATEMENT),
 ]
 
 

@@ -56,6 +56,32 @@ struct Expression::Unary : Expression
 };
 
 
+struct Statement
+{
+    class Visitor;
+    class Expression;
+    class Print;
+    virtual ~Statement() = default;
+    virtual void accept(Visitor& visitor) const = 0;
+};
+
+
+struct Statement::Expression : Statement
+{
+    Expression(std::unique_ptr<Expression> expression);
+    void accept(Statement::Visitor& visitor) const override;
+    std::unique_ptr<Expression> expression;
+};
+
+
+struct Statement::Print : Statement
+{
+    Print(std::unique_ptr<Expression> expression);
+    void accept(Statement::Visitor& visitor) const override;
+    std::unique_ptr<Expression> expression;
+};
+
+
 class Expression::Visitor
 {
 public:
@@ -63,4 +89,12 @@ public:
     virtual void visit(const Expression::Grouping& grouping) = 0;
     virtual void visit(const Expression::Literal& literal) = 0;
     virtual void visit(const Expression::Unary& unary) = 0;
+};
+
+
+class Statement::Visitor
+{
+public:
+    virtual void visit(const Statement::Expression& expression) = 0;
+    virtual void visit(const Statement::Print& print) = 0;
 };

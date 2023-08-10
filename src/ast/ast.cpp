@@ -19,3 +19,11 @@ void Expression::Literal::accept(Expression::Visitor& visitor) const { visitor.v
 
 Expression::Unary::Unary(Token op, std::unique_ptr<Expression> right) : op{std::move(op)}, right{std::move(right)} {}
 void Expression::Unary::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
+
+
+Statement::Expression::Expression(std::unique_ptr<Expression> expression) : expression{std::move(expression)} {}
+void Statement::Expression::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
+
+
+Statement::Print::Print(std::unique_ptr<Expression> expression) : expression{std::move(expression)} {}
+void Statement::Print::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
