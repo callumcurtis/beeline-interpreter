@@ -15,8 +15,10 @@ public:
     void visit(const Expression::Grouping& grouping) override;
     void visit(const Expression::Literal& literal) override;
     void visit(const Expression::Unary& unary) override;
+    void visit(const Expression::Variable& variable) override;
     void visit(const Statement::Expression& expression) override;
     void visit(const Statement::Print& print) override;
+    void visit(const Statement::VariableDeclaration& variable_declaration) override;
 private:
     class Impl;
     std::unique_ptr<Impl> impl_;

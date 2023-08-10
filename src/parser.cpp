@@ -29,7 +29,15 @@ public:
         consume_newlines();
         while (!is_done())
         {
-            statements.push_back(statement());
+            try
+            {
+                statements.push_back(declaration());
+            }
+            catch (const BeelineParseError& e)
+            {
+                log(LoggingLevel::ERROR) << e;
+                recover();
+            }
             consume_newlines();
         }
         return statements;
@@ -182,10 +190,27 @@ private:
                 advance();
                 expr = std::make_unique<Expression::Grouping>(std::move(expr));
                 break;
+            case Token::Type::IDENTIFIER:
+                expr = std::make_unique<Expression::Variable>(token);
+                break;
             default:
                 panic("expected expression", token);
         }
         return expr;
+    }
+    std::unique_ptr<Statement> declaration()
+    {
+        std::unique_ptr<Statement> stmt;
+        if (is_match(Token::Type::VAR))
+        {
+            advance();
+            stmt = variable_declaration();
+        }
+        else
+        {
+            stmt = statement();
+        }
+        return stmt;
     }
     std::unique_ptr<Statement> statement()
     {
@@ -221,6 +246,25 @@ private:
             advance();
         }
         return std::make_unique<Statement::Expression>(std::move(expr));
+    }
+    std::unique_ptr<Statement> variable_declaration()
+    {
+        assert(is_match(Token::Type::VAR));
+        advance();
+        require_match(Token::Type::IDENTIFIER, "expected identifier");
+        const Token& name = advance();
+        std::unique_ptr<Expression> initializer;
+        if (is_match(Token::Type::EQUAL))
+        {
+            advance();
+            initializer = expression();
+        }
+        if (!is_done())
+        {
+            require_match({Token::Type::NEWLINE}, "expected newline or EOF after variable declaration");
+            advance();
+        }
+        return std::make_unique<Statement::VariableDeclaration>(name, std::move(initializer));
     }
 };
 

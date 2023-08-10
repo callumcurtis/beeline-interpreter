@@ -16,6 +16,7 @@ struct Expression
     class Grouping;
     class Literal;
     class Unary;
+    class Variable;
     virtual ~Expression() = default;
     virtual void accept(Visitor& visitor) const = 0;
 };
@@ -56,11 +57,20 @@ struct Expression::Unary : Expression
 };
 
 
+struct Expression::Variable : Expression
+{
+    Variable(Token name);
+    void accept(Expression::Visitor& visitor) const override;
+    Token name;
+};
+
+
 struct Statement
 {
     class Visitor;
     class Expression;
     class Print;
+    class VariableDeclaration;
     virtual ~Statement() = default;
     virtual void accept(Visitor& visitor) const = 0;
 };
@@ -83,6 +93,15 @@ struct Statement::Print : Statement
 };
 
 
+struct Statement::VariableDeclaration : Statement
+{
+    VariableDeclaration(Token name, std::unique_ptr<::Expression> initializer);
+    void accept(Statement::Visitor& visitor) const override;
+    Token name;
+    std::unique_ptr<::Expression> initializer;
+};
+
+
 class Expression::Visitor
 {
 public:
@@ -90,6 +109,7 @@ public:
     virtual void visit(const Expression::Grouping& grouping) = 0;
     virtual void visit(const Expression::Literal& literal) = 0;
     virtual void visit(const Expression::Unary& unary) = 0;
+    virtual void visit(const Expression::Variable& variable) = 0;
 };
 
 
@@ -98,4 +118,5 @@ class Statement::Visitor
 public:
     virtual void visit(const Statement::Expression& expression) = 0;
     virtual void visit(const Statement::Print& print) = 0;
+    virtual void visit(const Statement::VariableDeclaration& variabledeclaration) = 0;
 };

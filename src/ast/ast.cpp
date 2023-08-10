@@ -21,9 +21,17 @@ Expression::Unary::Unary(Token op, std::unique_ptr<Expression> right) : op{std::
 void Expression::Unary::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
 
 
+Expression::Variable::Variable(Token name) : name{std::move(name)} {}
+void Expression::Variable::accept(Expression::Visitor& visitor) const { visitor.visit(*this); }
+
+
 Statement::Expression::Expression(std::unique_ptr<::Expression> expression) : expression{std::move(expression)} {}
 void Statement::Expression::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
 
 
 Statement::Print::Print(Token keyword, std::unique_ptr<::Expression> expression) : keyword{std::move(keyword)}, expression{std::move(expression)} {}
 void Statement::Print::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
+
+
+Statement::VariableDeclaration::VariableDeclaration(Token name, std::unique_ptr<::Expression> initializer) : name{std::move(name)}, initializer{std::move(initializer)} {}
+void Statement::VariableDeclaration::accept(Statement::Visitor& visitor) const { visitor.visit(*this); }
