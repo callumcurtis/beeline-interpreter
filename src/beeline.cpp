@@ -4,6 +4,7 @@
 #include "parser.hpp"
 #include "ast/ast.hpp"
 #include "ast/stringify.hpp"
+#include "interpreter.hpp"
 
 
 BeelineError::BeelineError(const std::string& message) : std::runtime_error(message) {}
@@ -36,4 +37,6 @@ void Beeline::run(const std::string& input)
     ExpressionToString visitor;
     expr->accept(visitor);
     log(LoggingLevel::DEBUG) << visitor.str();
+
+    Interpreter{}.interpret(std::move(expr));
 }
