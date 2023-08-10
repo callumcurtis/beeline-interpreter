@@ -92,16 +92,8 @@ public:
 };
 
 
-class BeelineLexingError : public BeelineError
-{
-public:
-    BeelineLexingError(const std::string& message);
-};
-
-
 std::ostream& operator<<(std::ostream& os, const Token::Type& type);
 std::ostream& operator<<(std::ostream& os, const Token::Position& position);
 std::ostream& operator<<(std::ostream& os, const Token::Literal& literal);
 std::ostream& operator<<(std::ostream& os, const Token& token);
 std::ostream& operator<<(std::ostream& os, const BeelineSyntaxError& bse);
-std::ostream& operator<<(std::ostream& os, const BeelineLexingError& ble);

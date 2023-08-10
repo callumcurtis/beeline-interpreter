@@ -2,6 +2,7 @@
 #include <cctype>
 #include <sstream>
 #include <cassert>
+#include <optional>
 
 #include "lexer.hpp"
 #include "logging.hpp"
@@ -16,18 +17,9 @@ BeelineSyntaxError::BeelineSyntaxError(
 ) : BeelineError(message), position(position) {}
 
 
-BeelineLexingError::BeelineLexingError(const std::string& message) : BeelineError(message) {}
-
-
 std::ostream& operator<<(std::ostream& os, const BeelineSyntaxError& bse)
 {
     return os << "BeelineSyntaxError: " << bse.what() << " at " << bse.position;
-}
-
-
-std::ostream& operator<<(std::ostream& os, const BeelineLexingError& ble)
-{
-    return os << "BeelineLexingError: " << ble.what();
 }
 
 
@@ -114,8 +106,7 @@ public:
     Impl(const std::string& input) : input_(input) {}
     const std::vector<Token>& scan()
     {
-        bool syntax_error{false};
-        std::ostringstream syntax_error_messages;
+        std::optional<Token::Position> first_bad_position;
         while(!is_done())
         {
             try
@@ -124,15 +115,17 @@ public:
             }
             catch (const BeelineSyntaxError& bse)
             {
-                syntax_error = true;
+                if (!first_bad_position)
+                {
+                    first_bad_position = bse.position;
+                }
                 log(LoggingLevel::ERROR) << bse;
-                syntax_error_messages << bse << "\n";
             }
         }
         add_token(Token::Type::END_OF_FILE);
-        if (syntax_error)
+        if (first_bad_position)
         {
-            throw BeelineLexingError(syntax_error_messages.str());
+            throw BeelineSyntaxError("encountered one or more syntax errors", *first_bad_position);
         }
         return tokens_;
     }

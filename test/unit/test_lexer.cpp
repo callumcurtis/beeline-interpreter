@@ -33,19 +33,19 @@ TEST_CASE("scan")
     {
         const auto input = ".h";
         auto lexer = Lexer{input};
-        REQUIRE_THROWS_AS(lexer.scan(), BeelineLexingError);
+        REQUIRE_THROWS_AS(lexer.scan(), BeelineSyntaxError);
     }
     SECTION("unterminated string")
     {
         const auto input = "\"";
         auto lexer = Lexer{input};
-        REQUIRE_THROWS_AS(lexer.scan(), BeelineLexingError);
+        REQUIRE_THROWS_AS(lexer.scan(), BeelineSyntaxError);
     }
     SECTION("unexpected character")
     {
         const auto input = "$";
         auto lexer = Lexer{input};
-        REQUIRE_THROWS_AS(lexer.scan(), BeelineLexingError);
+        REQUIRE_THROWS_AS(lexer.scan(), BeelineSyntaxError);
     }
     SECTION("identifier")
     {
