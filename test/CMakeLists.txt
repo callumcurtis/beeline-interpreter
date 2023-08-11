@@ -13,5 +13,5 @@ target_include_directories(tests
 target_link_libraries(tests
     PRIVATE
     Beeline::beeline
-    Catch2::Catch2WithMain
+    Catch2::Catch2
 )
