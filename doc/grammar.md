@@ -2,15 +2,15 @@
 
 ## Syntax Grammar (Parser)
 
-The Beeline language syntax, $B$, is defined using a context-free grammar, $G = (V, \sum, R, S)$, where $V$ is a finite set of variables, $\sum$ is a finite set of terminals, $R$ is a finite set of substitution ruless, and $S \in V$ is the start variable, such that $B = L(G)$.
+The Beeline language syntax, $B$, is defined using a context-free grammar, $G = (V, \sum, R, S)$, where $V$ is a finite set of variables, $\sum$ is a finite set of terminals, $R$ is a finite set of substitution rules, and $S \in V$ is the start variable, such that $B = L(G)$.
 
-> $V =$ {program, declaration, variable_declaration, statement, identifier, expression, expression_statement, if_statement, print_statement, while_statement, block, assignment, logical_or, logical_and, equality, comparison, term, factor, unary, end}
+> $V =$ {program, declaration, variable_declaration, statement, identifier, expression, expression_statement, if_statement, print_statement, while_statement, block, assignment, logical_or, logical_and, equality, comparison, term, factor, unary, newline, end}
 > 
 > $\sum =$ all ASCII characters
 > 
 > $R$:
 > 
-> program $\rightarrow$ declaration* EOF ;
+> program $\rightarrow$ (newline* declaration)* EOF ;
 > 
 > declaration $\rightarrow$ variable_declaration | statement ;
 > 
@@ -20,11 +20,11 @@ The Beeline language syntax, $B$, is defined using a context-free grammar, $G = 
 > 
 > expression_statement $\rightarrow$ expression end ;
 > 
-> if_statement $\rightarrow$ "if" "(" expression ")" statement | "if" "(" expression ")" statement "else" statement ;
+> if_statement $\rightarrow$ "if" "(" newline* expression newline* ")" newline* statement newline* ( "else" newline* statement )? ;
 > 
 > print_statement $\rightarrow$ "print" expression end ;
 > 
-> while_statement $\rightarrow$ "while" "(" expression ")" statement ;
+> while_statement $\rightarrow$ "while" "(" newline* expression newline* ")" newline* statement ;
 > 
 > block $\rightarrow$ "{" declaration* "}" ;
 > 
@@ -46,7 +46,9 @@ The Beeline language syntax, $B$, is defined using a context-free grammar, $G = 
 > 
 > unary $\rightarrow$ ("!" | "-") unary ;
 >
-> end $\rightarrow$ "\\n" | EOF ;
+> newline $\rightarrow$ "\\n" ;
+>
+> end $\rightarrow$ newline | EOF ;
 > 
 > $S =$ program
 

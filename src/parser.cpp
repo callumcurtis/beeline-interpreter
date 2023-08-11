@@ -313,15 +313,20 @@ private:
         const Token& if_keyword = advance();
         require_match(Token::Type::LEFT_PARENTHESIS, "expected '(' after 'if'");
         advance();
+        consume_newlines();
         std::unique_ptr<Expression> condition = expression();
+        consume_newlines();
         require_match(Token::Type::RIGHT_PARENTHESIS, "expected ')' after if condition");
         advance();
+        consume_newlines();
         std::unique_ptr<Statement> then_statement = statement();
+        consume_newlines();
         std::optional<Token> else_keyword;
         std::unique_ptr<Statement> else_statement;
         if (is_match(Token::Type::ELSE))
         {
             else_keyword = advance();
+            consume_newlines();
             else_statement = statement();
         }
         return std::make_unique<Statement::IfElse>(std::move(condition), if_keyword, std::move(then_statement), else_keyword, std::move(else_statement));
@@ -332,9 +337,12 @@ private:
         const Token& keyword = advance();
         require_match(Token::Type::LEFT_PARENTHESIS, "expected '(' after 'while'");
         advance();
+        consume_newlines();
         std::unique_ptr<Expression> condition = expression();
+        consume_newlines();
         require_match(Token::Type::RIGHT_PARENTHESIS, "expected ')' after while condition");
         advance();
+        consume_newlines();
         std::unique_ptr<Statement> body = statement();
         return std::make_unique<Statement::WhileLoop>(keyword, std::move(condition), std::move(body));
     }
