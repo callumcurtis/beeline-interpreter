@@ -19,5 +19,14 @@ int main(const int argc, const char** argv)
 {
     Arguments arguments = ArgumentParser().parse(argc, argv);
     init_logging(arguments.logging_level);
-    Beeline{}.run(read_all_from(std::cin));
+    int return_code = 0;
+    try
+    {
+        Beeline{}.run(read_all_from(std::cin));
+    }
+    catch (const BeelineError& be)
+    {
+        return_code = 1;
+    }
+    return return_code;
 }

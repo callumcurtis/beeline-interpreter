@@ -22,7 +22,6 @@ void Beeline::run(const std::string& input)
     {
         std::vector<Token> tokens = Lexer{input}.scan();
 
-        log(LoggingLevel::DEBUG) << "Tokens:";
         for (const Token& token : tokens)
         {
             log(LoggingLevel::DEBUG) << token;
@@ -30,7 +29,6 @@ void Beeline::run(const std::string& input)
 
         std::vector<std::unique_ptr<Statement>> statements = Parser{tokens}.parse();
 
-        log(LoggingLevel::DEBUG) << "Statements:";
         for (const std::unique_ptr<Statement>& statement : statements)
         {
             ExpressionToString visitor;
@@ -42,14 +40,17 @@ void Beeline::run(const std::string& input)
     }
     catch (const BeelineSyntaxError& bse)
     {
+        log(LoggingLevel::ERROR) << bse.what();
         throw BeelineError{bse.what()};
     }
     catch (const BeelineParseError& bpe)
     {
+        log(LoggingLevel::ERROR) << bpe.what();
         throw BeelineError{bpe.what()};
     }
     catch (const BeelineRuntimeError& bre)
     {
+        log(LoggingLevel::ERROR) << bre.what();
         throw BeelineError{bre.what()};
     }
 }
