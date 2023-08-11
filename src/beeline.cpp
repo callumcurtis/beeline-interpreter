@@ -40,17 +40,14 @@ void Beeline::run(const std::string& input)
     }
     catch (const BeelineSyntaxError& bse)
     {
-        log(LoggingLevel::ERROR) << bse.what();
         throw BeelineError{bse.what()};
     }
     catch (const BeelineParseError& bpe)
     {
-        log(LoggingLevel::ERROR) << bpe.what();
         throw BeelineError{bpe.what()};
     }
     catch (const BeelineRuntimeError& bre)
     {
-        log(LoggingLevel::ERROR) << bre.what();
         throw BeelineError{bre.what()};
     }
 }

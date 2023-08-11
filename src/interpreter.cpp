@@ -10,6 +10,7 @@
 #include "interpreter.hpp"
 #include "environment.hpp"
 #include "replace.hpp"
+#include "logging.hpp"
 
 
 class Interpreter::Impl : public Expression::Visitor, public Statement::Visitor
@@ -265,7 +266,9 @@ private:
     Token::Literal value_;
     void panic(const Token& token, const std::string& message) const
     {
-        throw BeelineRuntimeError(message, token.position);
+        BeelineRuntimeError bre{message, token.position};
+        log(LoggingLevel::ERROR) << bre;
+        throw bre;
     }
     template <typename T>
     void require(const Token::Literal& value, const Token& token, const std::string& message) const

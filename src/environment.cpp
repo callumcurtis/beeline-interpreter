@@ -3,6 +3,7 @@
 
 #include "environment.hpp"
 #include "lexer.hpp"
+#include "logging.hpp"
 #include "interpreter.hpp"
 
 
@@ -57,7 +58,9 @@ private:
     Impl* parent_;
     void panic(const std::string& message, const Token::Position& position) const
     {
-        throw BeelineRuntimeError(message, position);
+        BeelineRuntimeError bre{message, position};
+        log(LoggingLevel::ERROR) << bre;
+        throw bre;
     }
 };
 
