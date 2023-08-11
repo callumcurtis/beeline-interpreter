@@ -153,7 +153,7 @@ private:
     {
         po::options_description desc("Allowed options");
         desc.add_options()
-            ("debug_level,d", po::value<int>()->default_value(4), "set debug level")
+            ("debug_level,d", po::value<int>()->default_value(4), "set debug level (0=trace, 1=debug, 2=info, 3=warn, 4=error, 5=fatal)")
             ("help,h", "produce help message")
             ("version,v", "print version string")
         ;
