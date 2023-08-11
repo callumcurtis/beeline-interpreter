@@ -1,5 +1,9 @@
+ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
+
 find_package(Boost
+    1.82.0
     REQUIRED COMPONENTS
+    program_options
     log
 )
 
@@ -19,12 +23,12 @@ target_include_directories(beeline_lib
     ${PROJECT_SOURCE_DIR}/include
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${Boost_INCLUDE_DIRS}
 )
 
 target_link_libraries(beeline_lib
     PRIVATE
-    ${Boost_LIBRARIES}
+    Boost::program_options
+    Boost::log
 )
 
 add_library(Beeline::beeline ALIAS beeline_lib)
