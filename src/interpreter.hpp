@@ -7,7 +7,7 @@
 
 #include "beeline.hpp"
 #include "lexer.hpp"
-#include "ast/ast.hpp"
+#include "ast.hpp"
 
 
 class Interpreter

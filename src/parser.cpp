@@ -7,7 +7,7 @@
 #include <optional>
 
 #include "parser.hpp"
-#include "ast/ast.hpp"
+#include "ast.hpp"
 #include "lexer.hpp"
 #include "logging.hpp"
 

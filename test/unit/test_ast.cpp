@@ -2,8 +2,8 @@
 
 #include <sstream>
 
-#include "ast/ast.hpp"
-#include "ast/stringify.hpp"
+#include "ast.hpp"
+#include "stringify.hpp"
 
 
 TEST_CASE("tostring")

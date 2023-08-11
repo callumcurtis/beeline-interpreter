@@ -2,8 +2,8 @@
 #include "lexer.hpp"
 #include "logging.hpp"
 #include "parser.hpp"
-#include "ast/ast.hpp"
-#include "ast/stringify.hpp"
+#include "ast.hpp"
+#include "stringify.hpp"
 #include "interpreter.hpp"
 
 

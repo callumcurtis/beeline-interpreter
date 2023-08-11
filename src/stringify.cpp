@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 
-#include "ast/ast.hpp"
-#include "ast/stringify.hpp"
+#include "ast.hpp"
+#include "stringify.hpp"
 
 
 class ExpressionToString::Impl : public Expression::Visitor, public Statement::Visitor

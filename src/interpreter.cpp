@@ -6,7 +6,7 @@
 
 #include "beeline.hpp"
 #include "lexer.hpp"
-#include "ast/ast.hpp"
+#include "ast.hpp"
 #include "interpreter.hpp"
 #include "environment.hpp"
 #include "replace.hpp"

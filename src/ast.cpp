@@ -4,7 +4,7 @@
 
 #include <optional>
 
-#include "ast/ast.hpp"
+#include "ast.hpp"
 
 
 Expression::Binary::Binary(std::unique_ptr<Expression> left, Token op, std::unique_ptr<Expression> right) : left{std::move(left)}, op{std::move(op)}, right{std::move(right)} {}

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "ast/ast.hpp"
+#include "ast.hpp"
 
 
 class ExpressionToString : public Expression::Visitor, public Statement::Visitor

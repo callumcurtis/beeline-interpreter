@@ -2,7 +2,7 @@ find_package(Catch2 REQUIRED)
 
 add_executable(tests
     unit/test_lexer.cpp
-    unit/ast/test_ast.cpp
+    unit/test_ast.cpp
 )
 
 target_include_directories(tests
