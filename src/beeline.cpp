@@ -18,23 +18,38 @@ std::ostream& operator<<(std::ostream& os, const BeelineError& be)
 
 void Beeline::run(const std::string& input)
 {
-    std::vector<Token> tokens = Lexer{input}.scan();
-
-    for (const Token& token : tokens)
+    try
     {
-        // TODO: Remove this logging.
-        log(LoggingLevel::DEBUG) << token;
+        std::vector<Token> tokens = Lexer{input}.scan();
+
+        log(LoggingLevel::DEBUG) << "Tokens:";
+        for (const Token& token : tokens)
+        {
+            log(LoggingLevel::DEBUG) << token;
+        }
+
+        std::vector<std::unique_ptr<Statement>> statements = Parser{tokens}.parse();
+
+        log(LoggingLevel::DEBUG) << "Statements:";
+        for (const std::unique_ptr<Statement>& statement : statements)
+        {
+            ExpressionToString visitor;
+            statement->accept(visitor);
+            log(LoggingLevel::DEBUG) << visitor.str();
+        }
+
+        Interpreter{}.interpret(std::move(statements));
     }
-
-    std::vector<std::unique_ptr<Statement>> statements = Parser{tokens}.parse();
-
-    for (const std::unique_ptr<Statement>& statement : statements)
+    catch (const BeelineSyntaxError& bse)
     {
-        // TODO: Remove this logging.
-        ExpressionToString visitor;
-        statement->accept(visitor);
-        log(LoggingLevel::DEBUG) << visitor.str();
+        throw BeelineError{bse.what()};
     }
-
-    Interpreter{}.interpret(std::move(statements));
+    catch (const BeelineParseError& bpe)
+    {
+        throw BeelineError{bpe.what()};
+    }
+    catch (const BeelineRuntimeError& bre)
+    {
+        throw BeelineError{bre.what()};
+    }
 }
