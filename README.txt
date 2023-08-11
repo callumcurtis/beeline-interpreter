@@ -6,6 +6,8 @@ the well-defined grammar of the Beeline programming language.
 
 The Beeline programming language is a novel language designed for this
 project. For the formal grammar of the language, please visit doc/grammar.md.
+For a more informal introduction to the Beeline syntax and semantics, please
+consider section 3.2 of doc/proposal.pdf.
 
 For the original project proposal, please refer to doc/proposal.pdf. The
 proposal document contains many details about the project, including scope,
@@ -46,3 +48,14 @@ To build and install the software, use the commands:
 
 To run a demonstration, use the command:
     $INSTALL_DIR/bin/demo
+
+To write your own program, use the following command, write your program in
+the terminal, then send EOF (CTRL+D on Linux) to signal the interpreter to start
+processing:
+    $INSTALL_DIR/bin/beeline
+
+Alternatively, write your program in a file and redirect it to the interpreter:
+    $INSTALL_DIR/bin/beeline < path_to_your_input_file
+
+For advanced usage information, use the command:
+    $INSTALL_DIR/bin/beeline --help
