@@ -3,7 +3,6 @@ ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 find_package(Boost
     1.82.0
     REQUIRED COMPONENTS
-    program_options
     log
 )
 
@@ -27,7 +26,6 @@ target_include_directories(beeline_lib
 
 target_link_libraries(beeline_lib
     PRIVATE
-    Boost::program_options
     Boost::log
 )
 
