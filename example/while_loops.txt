@@ -1,0 +1,6 @@
+var i = 0
+while (i < 1000)
+{
+    i = i + 1
+}
+print "Value of i after 1000 increments = " + i

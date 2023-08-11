@@ -1,0 +1,17 @@
+// Ordering-based comparisons (both operands must be numerical).
+print "(1 < 2) = " + (1 < 2) + ", "
+print "(1 <= 1) = " + (1 <= 2) + ", "
+print "(2 > 1) = " + (2 > 1) + ", "
+print "(1 >= 1) = " + (1 >= 1) + ", "
+
+// Equality and inequality (operands of same type).
+print "(1 == 2) = " + (1 == 2) + ", "
+print "(1 == 1) = " + (1 == 1) + ", "
+print "(true == false) = " + (true == false) + ", "
+print "('123' == '234') = " + ("123" == "234") + ", "
+print "('123' == '123') = " + ("123" == "123") + ", "
+print "(null == null) = " + (null == null) + ", "
+
+// Equality and inequality operations between different types
+// always evaluate to false.
+print "(123 == '123') = " + (123 == "123")

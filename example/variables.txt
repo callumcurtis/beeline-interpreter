@@ -1,0 +1,9 @@
+var b // Variables default to null
+var a = "foobar"
+var c = 2.49
+
+b = a
+
+print "a = " + a + ", "
+print "b = " + b + ", "
+print "c = " + c

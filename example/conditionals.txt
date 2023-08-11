@@ -1,0 +1,13 @@
+if ((5 / 2) < 2)
+{
+    print "(5 / 2) < 2 is true"
+}
+else
+{
+    print "(5 / 2) < 2 is false"
+}
+
+if (((6 / 2) * 4) + 3 == 15)
+{
+    print ", also, ((6 / 2) * 4) + 3 == 15 is true"
+}

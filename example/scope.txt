@@ -1,0 +1,24 @@
+var a = "global a"
+var b = "global b"
+var c = "global c"
+{
+  var a = "outer a"
+  var b = "outer b"
+  {
+    print "[INNER]: "
+    var a = "inner a"
+    print a + ", "
+    print b + ", "
+    print c + ", "
+  }
+  print "[OUTER]: "
+  a = "reassigned outer a"
+  c = "reassigned global c"
+  print a + ", "
+  print b + ", "
+  print c + ", "
+}
+print "[GLOBAL]: "
+print a + ", "
+print b + ", "
+print c

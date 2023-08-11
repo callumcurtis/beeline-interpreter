@@ -1,0 +1,19 @@
+var trailing = 0
+var leading = 1
+
+var n_to_find = 20
+
+print "First " + n_to_find + " elements in the fibonacci sequence:"
+
+var n_found = 0
+while (n_found < n_to_find) {
+  print " " + trailing
+  if (n_found < (n_to_find - 1))
+  {
+    print ","
+  }
+  var temp = trailing
+  trailing = leading
+  leading = temp + leading
+  n_found = n_found + 1
+}

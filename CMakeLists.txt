@@ -15,6 +15,7 @@ if(ENABLE_COVERAGE)
     append_coverage_compiler_flags()
 endif()
 
+add_subdirectory(example)
 add_subdirectory(src)
 add_subdirectory(app)
 add_subdirectory(test)
@@ -22,3 +23,7 @@ add_subdirectory(test)
 if(ENABLE_COVERAGE)
     # Create the coverage target.
 endif()
+
+install(TARGETS beeline DESTINATION bin)
+install(PROGRAMS ${DEMO_SCRIPT_PATH} DESTINATION bin)
+install(FILES ${DEMO_SCRIPT_DEPENDENCIES} DESTINATION bin)

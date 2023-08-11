@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+
+# Print an error message and exit.
+# Taken from: https://github.com/mdadams/uvic_elec586_project_example/blob/master/demo
+panic()
+{
+	echo "ERROR: $@"
+	exit 1
+}
+
+
+# Get the directory in which the currently running script is located.
+# Taken from: https://github.com/mdadams/uvic_elec586_project_example/blob/master/demo
+cmd_dir=$(dirname "$0") || panic "cannot determine command directory"
+beeline="$cmd_dir/beeline"
+
+
+# List of files to run beeline on
+files=(
+    "$cmd_dir/comments.txt"
+    "$cmd_dir/arithmetic.txt"
+    "$cmd_dir/concatenation.txt"
+    "$cmd_dir/comparisons.txt"
+    "$cmd_dir/logical_operators.txt"
+    "$cmd_dir/precedence.txt"
+    "$cmd_dir/variables.txt"
+    "$cmd_dir/conditionals.txt"
+    "$cmd_dir/while_loops.txt"
+    "$cmd_dir/scope.txt"
+    "$cmd_dir/fibonnaci.txt"
+)
+
+
+# Run beeline on each file
+for file in "${files[@]}"
+do
+    echo "############################################################"
+    echo "Running beeline on $file"
+    echo "############################################################"
+    echo ""
+    echo "FILE CONTENTS:"
+    echo ""
+    echo ""
+    cat "$file"
+    echo ""
+    echo ""
+    echo "------------------------------------------------------------"
+    echo ""
+    echo "OUTPUT:"
+    echo ""
+    echo ""
+    $beeline  < $file
+    echo ""
+    echo ""
+    echo ""
+    echo "------------------------------------------------------------"
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+done

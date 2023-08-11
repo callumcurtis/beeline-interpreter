@@ -1,0 +1,2 @@
+// Same precedence and associativity as C++
+print "3 + 4 * 6 - 2 / 8 = " + (3 + 4 * 6 - 2 / 8)

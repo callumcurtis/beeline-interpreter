@@ -1,0 +1,10 @@
+var string1 = "foo"
+var string2 = "bar"
+var number = 3
+var bool = true
+
+print "string1 + string2 = " + (string1 + string2) + ", "
+print "string1 + number = " + (string1 + number) + ", "
+print "number + string2 = " + (number + string2) + ", "
+print "string1 + bool = " + (string1 + bool) + ", "
+print "bool + string2 = " + (bool + string2)

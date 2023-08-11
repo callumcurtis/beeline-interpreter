@@ -1,0 +1,5 @@
+// This is a comment. This line will not be interpreted.
+
+var a = 23 // The remainder of this line after the slashes will not be interpreted.
+
+print "a = " + a
