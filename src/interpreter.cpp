@@ -87,33 +87,17 @@ public:
                 {
                     panic(binary.op, "cannot add two booleans");
                 }
-                if (std::holds_alternative<bool>(left))
-                {
-                    to_string(left);
-                }
-                else if (std::holds_alternative<bool>(right))
-                {
-                    to_string(right);
-                }
-                assert(std::holds_alternative<std::string>(left) || std::holds_alternative<double>(left));
-                assert(std::holds_alternative<std::string>(right) || std::holds_alternative<double>(right));
                 const bool is_concatenation = std::holds_alternative<std::string>(left) || std::holds_alternative<std::string>(right);
                 if (is_concatenation)
                 {
-                    if (!std::holds_alternative<std::string>(left))
-                    {
-                        to_string(left);
-                    }
-                    if (!std::holds_alternative<std::string>(right))
-                    {
-                        to_string(right);
-                    }
+                    to_string(left);
+                    to_string(right);
                     value_ = std::get<std::string>(left) + std::get<std::string>(right);
                 }
                 else
                 {
-                    assert(std::holds_alternative<double>(left));
-                    assert(std::holds_alternative<double>(right));
+                    require<double>(left, binary.op, "left operand must be a number to participate in addition");
+                    require<double>(right, binary.op, "right operand must be a number to participate in addition");
                     value_ = std::get<double>(left) + std::get<double>(right);
                 }
                 break;
