@@ -14,6 +14,11 @@ enum struct LoggingLevel
 };
 
 
+// Initializes the logging system with the given logging level.
+// The logging level determines which log messages are printed.
+// Log messages with a level less than the given logging level
+// are not printed. The output stream is std::clog or std::cerr,
+// depending on the severity of the log message.
 void init_logging(const LoggingLevel logging_level);
 
 
@@ -54,4 +59,8 @@ private:
 };
 
 
+// Returns a LoggingStream with the given logging level.
+// Log messages written to the returned LoggingStream are
+// printed if their logging level is greater than or equal
+// to the given logging level.
 LoggingStream log(const LoggingLevel logging_level);

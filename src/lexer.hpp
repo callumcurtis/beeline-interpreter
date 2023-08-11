@@ -8,6 +8,7 @@
 #include "beeline.hpp"
 
 
+// Represents a token in the beeline language.
 struct Token
 {
     enum struct Type
@@ -71,19 +72,23 @@ struct Token
 };
 
 
+// Creates Beeline tokens from the given input.
 class Lexer
 {
 public:
     Lexer() = delete;
     Lexer(const std::string& input);
     ~Lexer();
+    // Tokenizes the given input.
     const std::vector<Token>& scan();
 private:
+    // PIMPL idiom
     class Impl;
     std::unique_ptr<Impl> impl_;
 };
 
 
+// Exception thrown when an error occurs in the beeline lexer.
 class BeelineSyntaxError : public BeelineError
 {
 public:

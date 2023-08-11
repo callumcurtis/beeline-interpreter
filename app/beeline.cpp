@@ -6,6 +6,8 @@
 #include "beeline.hpp"
 
 
+// Reads all characters from the given input stream.
+// Returns a string containing all characters read.
 std::string read_all_from(std::istream& input)
 {
     input >> std::noskipws;
@@ -15,6 +17,10 @@ std::string read_all_from(std::istream& input)
 }
 
 
+// Reads all characters from stdin and runs the beeline
+// interpreter on the input. Sets the logging level
+// according to the given arguments. Returns 0 on success
+// and 1 on error.
 int main(const int argc, const char** argv)
 {
     Arguments arguments = ArgumentParser().parse(argc, argv);

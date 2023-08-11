@@ -38,6 +38,7 @@ void Beeline::run(const std::string& input)
 
         Interpreter{}.interpret(std::move(statements));
     }
+    // propagate internal errors to the user as BeelineErrors
     catch (const BeelineSyntaxError& bse)
     {
         throw BeelineError{bse.what()};

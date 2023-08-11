@@ -1,6 +1,8 @@
 #include <utility>
 
 
+// RAII class that replaces a variable with another value until the end of the
+// current scope.
 template <typename T>
 class ScopedReplace
 {

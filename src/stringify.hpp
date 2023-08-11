@@ -5,11 +5,13 @@
 #include "ast.hpp"
 
 
+// Converts an AST to a string. Visits are appended to an internal string.
 class ExpressionToString : public Expression::Visitor, public Statement::Visitor
 {
 public:
     ExpressionToString();
     ~ExpressionToString();
+    // Returns the current string.
     std::string str() const;
     void visit(const Expression::Binary& binary) override;
     void visit(const Expression::Grouping& grouping) override;

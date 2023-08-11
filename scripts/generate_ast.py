@@ -1,7 +1,7 @@
 """AST Generator
 
 Generates the AST classes for the parser. Writes to stdout.
-Accepts the output programming language.
+Accepts the output programming language as a command line argument.
 """
 
 import abc

@@ -13,6 +13,7 @@
 #include "logging.hpp"
 
 
+// Post-order AST visitor that interprets the program.
 class Interpreter::Impl : public Expression::Visitor, public Statement::Visitor
 {
 public:
@@ -214,6 +215,8 @@ public:
     }
     void visit(const Statement::Block& block) override
     {
+        // Replaces the current environment with a new one that is nested within the current one.
+        // After the block is executed, the old environment is restored.
         ScopedReplace replacer(environment_, Environment{}.nested(environment_));
         for (const std::unique_ptr<Statement>& statement : block.statements)
         {

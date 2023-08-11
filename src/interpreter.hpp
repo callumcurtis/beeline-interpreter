@@ -10,18 +10,22 @@
 #include "ast.hpp"
 
 
+// Interprets a list of statements.
 class Interpreter
 {
 public:
     Interpreter();
     ~Interpreter();
+    // Interprets the given list of statements.
     void interpret(const std::vector<std::unique_ptr<Statement>> statements);
 private:
+    // PIMPL idiom
     class Impl;
     std::unique_ptr<Impl> impl_;
 };
 
 
+// Exception thrown when an error occurs in the beeline interpreter.
 class BeelineRuntimeError : public BeelineError
 {
 public:

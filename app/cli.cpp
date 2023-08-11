@@ -10,6 +10,7 @@
 namespace po = boost::program_options;
 
 
+// Builds a string containing the usage information for the given process.
 std::string build_usage_string(const std::string &process_name, const po::options_description &desc)
 {
     std::stringstream ss;
@@ -18,6 +19,9 @@ std::string build_usage_string(const std::string &process_name, const po::option
 }
 
 
+// Context used in the argument handler chain. Contains the original
+// argc and argv, as well as the options description used to parse
+// the arguments.
 struct ArgumentParsingContext
 {
     int argc;
@@ -29,6 +33,8 @@ struct ArgumentParsingContext
 class ArgumentHandler
 {
 public:
+    // Sets the next handler in the chain.
+    // The next handler will be called after this handler has finished.
     void set_next(std::unique_ptr<ArgumentHandler> &&next)
     {
         this->next_ = std::move(next);
@@ -44,10 +50,12 @@ public:
 private:
     std::unique_ptr<ArgumentHandler> next_{nullptr};
 protected:
+    // Overriden by subclasses to implement the actual handling.
     virtual void handle_(const Arguments arguments, const ArgumentParsingContext context) const = 0;
 };
 
 
+// Ensures the help and version flags are not set at the same time.
 class HelpXorVersionValidationHandler : public ArgumentHandler
 {
 protected:
@@ -62,6 +70,7 @@ protected:
 };
 
 
+// Handles the version flag if it is set by printing the version and exiting.
 class VersionHandler : public ArgumentHandler
 {
 protected:
@@ -76,6 +85,7 @@ protected:
 };
 
 
+// Handles the help flag if it is set by printing the usage string and exiting.
 class HelpHandler : public ArgumentHandler
 {
 protected:
@@ -90,6 +100,7 @@ protected:
 };
 
 
+// Ensures the logging level is between 0 and 5.
 class LoggingLevelValidationHandler : public ArgumentHandler
 {
 protected:
@@ -104,16 +115,22 @@ protected:
 };
 
 
+// Parses the arguments and returns an Arguments object.
 class ArgumentParser::Impl
 {
 public:
     Impl()
     {
+        // Build the chain of responsibility. The order of handlers is important.
+        // Help and version must be checked for mutual exclusivity before
+        // the help and version handlers are called.
         std::unique_ptr<HelpXorVersionValidationHandler> mutual_exclusive_help_and_version_handler = std::make_unique<HelpXorVersionValidationHandler>();
         std::unique_ptr<LoggingLevelValidationHandler> logging_level_validation_handler = std::make_unique<LoggingLevelValidationHandler>();
         std::unique_ptr<HelpHandler> help_handler = std::make_unique<HelpHandler>();
         std::unique_ptr<VersionHandler> version_handler = std::make_unique<VersionHandler>();
 
+        // Set the next handler in the chain. Reverse order is necessary
+        // to ensure handlers are not referenced after they are moved.
         help_handler->set_next(std::move(version_handler));
         logging_level_validation_handler->set_next(std::move(help_handler));
         mutual_exclusive_help_and_version_handler->set_next(std::move(logging_level_validation_handler));

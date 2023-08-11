@@ -19,6 +19,11 @@ enum struct Associativity
 };
 
 
+// Recursive descent parser. Parses a list of tokens into a list of statements.
+// Private methods represent substitution rules in the grammar. Precedence
+// is represented by the order of the methods. Methods are called until a match
+// is found for the current token. Lower precedence methods are called first
+// to allow higher precedence methods to match first.
 class Parser::Impl
 {
 public:
@@ -107,6 +112,7 @@ private:
     {
         throw BeelineParseError(message, token);
     }
+    // Recovers after an error. Skips tokens until a statement boundary is found.
     void recover()
     {
         while (!is_done())
