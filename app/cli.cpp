@@ -138,7 +138,7 @@ public:
         po::notify(vm);
 
         const Arguments arguments = {
-            static_cast<LoggingLevel>(vm["logging_level"].as<int>()),
+            static_cast<LoggingLevel>(vm["debug_level"].as<int>()),
             vm.count("version") > 0,
             vm.count("help") > 0,
         };
@@ -153,7 +153,7 @@ private:
     {
         po::options_description desc("Allowed options");
         desc.add_options()
-            ("logging_level,d", po::value<int>()->default_value(0), "set logging level")
+            ("debug_level,d", po::value<int>()->default_value(4), "set debug level")
             ("help,h", "produce help message")
             ("version,v", "print version string")
         ;
