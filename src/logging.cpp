@@ -2,6 +2,7 @@
 
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
+#include <boost/log/utility/setup/console.hpp>
 
 #include "logging.hpp"
 
@@ -26,6 +27,8 @@ logging::trivial::severity_level to_boost_logging_level(const LoggingLevel loggi
 
 void init_logging(const LoggingLevel logging_level)
 {
+    // sets the output stream to std::clog
+    logging::add_console_log();
     logging::core::get()->set_filter(
         logging::trivial::severity >= to_boost_logging_level(logging_level)
     );
