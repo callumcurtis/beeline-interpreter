@@ -57,13 +57,16 @@ public:
                 value_ = std::get<double>(left) - std::get<double>(right);
                 break;
             case Token::Type::SLASH:
-                // TODO: Handle division by zero.
                 binary.left->accept(*this);
                 left = value_;
                 binary.right->accept(*this);
                 right = value_;
                 require<double>(left, binary.op, "left operand must be a number");
                 require<double>(right, binary.op, "right operand must be a number");
+                if (std::get<double>(right) == 0)
+                {
+                    panic(binary.op, "division by zero");
+                }
                 value_ = std::get<double>(left) / std::get<double>(right);
                 break;
             case Token::Type::STAR:
