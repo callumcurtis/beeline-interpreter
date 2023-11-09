@@ -89,3 +89,7 @@ For advanced usage information, use the command:
 ```bash
 $INSTALL_DIR/bin/beeline --help
 ```
+
+## Examples
+
+For examples of well-formed Beeline programs, please refer to the [examples](example).
