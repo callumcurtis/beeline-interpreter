@@ -1,7 +1,0 @@
-name "Callum Curtis"
-student_id "V00945190"
-email "callumcurtis@uvic.ca"
-term "2023-05"
-course "SENG475"
-section "T01"
-assignment "cpp_project"

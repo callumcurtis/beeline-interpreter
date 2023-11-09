@@ -19,7 +19,6 @@ public:
     // Interprets the given list of statements.
     void interpret(const std::vector<std::unique_ptr<Statement>> statements);
 private:
-    // PIMPL idiom
     class Impl;
     std::unique_ptr<Impl> impl_;
 };

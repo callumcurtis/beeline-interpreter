@@ -28,7 +28,6 @@ public:
     // environment if the variable is not defined in the current environment.
     Token::Literal get(const std::string& name, const Token::Position& position) const;
 private:
-    // PIMPL idiom
     class Impl;
     std::unique_ptr<Impl> impl_;
 };

@@ -68,7 +68,7 @@ def to_snake_case(s: str) -> str:
     return re.sub(r'(?<!^)(?=[A-Z])', '_', s).lower()
 
 
-class AstMetaProgrammer (abc.ABC):
+class AstMetaProgrammer(abc.ABC):
     def __init__(self, types: list[Type]):
         self._types = types
         self._visitable_types_by_parent = {}
@@ -105,7 +105,7 @@ class AstMetaProgrammer (abc.ABC):
         pass
 
 
-class CppAstMetaProgrammer (AstMetaProgrammer):
+class CppAstMetaProgrammer(AstMetaProgrammer):
     def __init__(self, types: list[Type], cli_args):
         super().__init__(types)
         parser = argparse.ArgumentParser()
@@ -146,7 +146,7 @@ class CppAstMetaProgrammer (AstMetaProgrammer):
         return ""
 
 
-class HppAstMetaProgrammer (AstMetaProgrammer):
+class HppAstMetaProgrammer(AstMetaProgrammer):
     def __init__(self, types: list[Type], cli_args):
         super().__init__(types)
 

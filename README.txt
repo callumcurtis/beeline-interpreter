@@ -1,5 +1,13 @@
 Beeline Interpreter
 
+NOTE: this project was selected and completed by Callum Curtis in satisfaction
+of requirements for SENG 475: Advanced Programming Techniques for Robust
+Efficient Computing at the University of Victoria during summer 2023. Many of
+the design and documentation decisions in this project were selected with this
+specific context in mind. This project counted for 20% of the overall course
+grade. This project was one of six projects selected to serve as examples for
+future students in the course.
+
 This repository contains the Beeline interpreter, an application that accepts
 Beeline source code from standard input and executes the program according to
 the well-defined grammar of the Beeline programming language.
