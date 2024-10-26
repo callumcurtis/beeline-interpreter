@@ -12,9 +12,14 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
+        packages.default = pkgs.callPackage ./beeline.nix { };
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             hyperfine
+            python313
+            cmake
+            boost182
+            catch2
           ];
         };
       }

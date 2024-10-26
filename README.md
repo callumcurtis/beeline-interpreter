@@ -93,3 +93,27 @@ $INSTALL_DIR/bin/beeline --help
 ## Examples
 
 For examples of well-formed Beeline programs, please refer to the [examples](example).
+
+## Benchmarks
+
+### Fibonacci
+
+The first 1,000,000 Fibonacci numbers were calculated using different languages and compared
+against the Beeline interpreter.
+
+```
+-- Beeline
+Benchmark 1: result/bin/beeline < benchmark/fibonacci/fibonacci.txt
+  Time (mean ± σ):      2.726 s ±  0.164 s    [User: 2.693 s, System: 0.008 s]
+  Range (min … max):    2.479 s …  3.022 s    10 runs
+
+-- Python 3.13.0
+Benchmark 2: python3 benchmark/fibonacci/fibonacci.py
+  Time (mean ± σ):     38.128 s ±  0.551 s    [User: 37.432 s, System: 0.255 s]
+  Range (min … max):   37.076 s … 38.894 s    10 runs
+
+Summary
+  result/bin/beeline < benchmark/fibonacci/fibonacci.txt ran
+   13.99 ± 0.86 times faster than python3 benchmark/fibonacci/fibonacci.py
+```
+
