@@ -28,7 +28,7 @@ files=(
     "$cmd_dir/conditionals.txt"
     "$cmd_dir/while_loops.txt"
     "$cmd_dir/scope.txt"
-    "$cmd_dir/fibonnaci.txt"
+    "$cmd_dir/fibonacci.txt"
 )
 
 

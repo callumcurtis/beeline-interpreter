@@ -9,6 +9,6 @@ set(EXAMPLE_PROGRAMS
     ${CMAKE_CURRENT_SOURCE_DIR}/conditionals.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/while_loops.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/scope.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/fibonnaci.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/fibonacci.txt
     PARENT_SCOPE
 )
