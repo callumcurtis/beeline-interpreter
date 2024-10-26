@@ -1,0 +1,8 @@
+var alpha = 0.05
+var accumulator = 0
+
+var i = 0
+while (i < 1000000) {
+  accumulator = (alpha * i) + (1.0 - alpha) * accumulator
+  i = i + 1
+}
